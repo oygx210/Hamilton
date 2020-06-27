@@ -1,0 +1,37 @@
+
+
+Sample Deep Space Gateway orbit file, produced to help scientists and
+engineers evaluate the "Rectilinear Halo Orbit" (NHRO) trajectory design.
+
+Description of the orbit provided by Ryan Whitley of JSC:
+
+A 15 year near-continuous phased reference of an L2 southern family Near
+Rectilinear Halo Orbit (NRHO) with a 9:2 lunar synodic resonance, wherein
+there are 9 revolutions for every 2 lunar synodic periods. The NRHO is
+characterized by a perilune radius of approximately 3,200 km over the northern
+hemisphere and apolune radius of approximately 70,000 km over the southern
+hemisphere.  The near-rectilinear halo orbit is defined as a specific kind of
+3-dimensional periodic halo orbit that emanates from a collinear libration
+point, aligns nearly perpendicular to the motion of the primaries, and appears
+almost rectilinear in shape. NRHOs generally have higher stability
+characteristics than other libration point halo orbits, but due to
+gravitational perturbations NRHOs are not stable enough to remain in constant
+periodic motion without small corrective maneuvers. The 9:2 lunar synodic
+resonant NRHO is phased within the NRHO such that it avoids eclipses by the
+Earth for over a decade at a time.  Shorter eclipses by the Moon are still
+present within the reference but are always less than 90 minutes.
+
+NOTE: This SPK file contains many very small (micro-second level) data gaps.
+NAIF believes this should not impact SPICE-based applications.
+
+The SPICE ID for the DSG platform (the spacecraft) is -60000.
+The orbit is given with respect to the earth, for which the SPICE ID is 399.
+(One might have thought the orbit data would have been with respect to the
+moon, SPICE ID 301.)
+
+Orbit start date (in ET, or TBD):  2020 JAN 02 08:09:36
+Orbit stop date (in ET, or TDB):   2035 FEB 11 03:59:59
+
+This SPK file was produced by David Lee, JSC Flight Mechanics and Trajectory Design Branch.
+
+  -  18 July 2018    Charles Acton, NAIF, JPL
