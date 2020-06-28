@@ -1,9 +1,6 @@
 [submodule "extern/googletest"]
 	path = extern/googletest
 	url = https://github.com/google/googletest
-[submodule "extern\\gcem\\"]
-	path = extern\\gcem\\
-	url = https://github.com/kthohr/gcem.git
 [submodule "extern/spice"]
 	path = extern/spice
 	url = https://github.com/OpenSpace/Spice.git
