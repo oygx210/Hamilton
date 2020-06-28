@@ -98,7 +98,7 @@ inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime)
  */
 inline constexpr Spherical Cart2Sph(const Vector3& Cartesian)
 {
-    auto Radius = Cartesian.Norm();
+    const auto Radius = Cartesian.Norm();
 
     return Spherical {.Rad = Radius, 
                       .Azm = Atan2(Cartesian.Y, Cartesian.X), 
@@ -112,9 +112,9 @@ inline constexpr Spherical Cart2Sph(const Vector3& Cartesian)
  */
 inline constexpr Vector3 Sph2Cart(const Spherical& Spherical)
 {
-    auto STheta = Sin(Spherical.Azm);
-    auto CTheta = Cos(Spherical.Azm);
-    auto CPhi   = Cos(Spherical.Inc);
+    const auto STheta = Sin(Spherical.Azm);
+    const auto CTheta = Cos(Spherical.Azm);
+    const auto CPhi   = Cos(Spherical.Inc);
 
     return Vector3({.X = Spherical.Rad * CTheta * CPhi,
                     .Y = Spherical.Rad * STheta * CPhi,
@@ -131,10 +131,10 @@ inline constexpr Vector3 Sph2Cart(const Spherical& Spherical)
  */
 inline constexpr Vector3 LLA2BCBF(const LLA& LLA, const EllipsoidRadii& Radii)
 {
-    auto CTheta = Cos(D2R(LLA.Lgt));
-    auto STheta = Sin(D2R(LLA.Lgt));
-    auto CPhi = Cos(D2R(LLA.Lat));
-    auto SPhi = Sin(D2R(LLA.Lat));
+    const auto CTheta = Cos(D2R(LLA.Lgt));
+    const auto STheta = Sin(D2R(LLA.Lgt));
+    const auto CPhi = Cos(D2R(LLA.Lat));
+    const auto SPhi = Sin(D2R(LLA.Lat));
 
     return Vector3({(Radii.Azimuthal + LLA.Alt) * CTheta * CPhi,
                     (Radii.Azimuthal + LLA.Alt) * STheta * CPhi,

@@ -81,7 +81,7 @@ public:
     /* Return the unit vector */
     constexpr Vector3 Unit(void) const
     {
-        auto Magn = Norm();	
+        const auto Magn = Norm();	
         if (Magn > 0)	
         {
             return *this / Magn;
