@@ -213,8 +213,8 @@ public:
     {
         return Quaternion{.X =  0.5 * (Omega.X * S + Omega.Y * Z - Omega.Z * Y),
                           .Y =  0.5 * (Omega.Y * S + Omega.Z * X - Omega.X * Z),
-                            .Z =  0.5 * (Omega.Z * S + Omega.X * Y - Omega.Y * X),
-                            .S = -0.5 * (Omega.X * X + Omega.Y * Y + Omega.Z * Z)};
+                          .Z =  0.5 * (Omega.Z * S + Omega.X * Y - Omega.Y * X),
+                          .S = -0.5 * (Omega.X * X + Omega.Y * Y + Omega.Z * Z)};
     }
     
     //
@@ -225,9 +225,9 @@ public:
     constexpr Quaternion operator*(const Quaternion& Q) const
     {
         return Quaternion{.X = Q.X * S + Q.S * X + Q.Z * Y - Q.Y * Z,
-                            .Y = Q.Y * S + Q.S * Y - Q.Z * X + Q.X * Z,
+                          .Y = Q.Y * S + Q.S * Y - Q.Z * X + Q.X * Z,
                           .Z = Q.Z * S + Q.S * Z + Q.Y * X - Q.X * Y,
-                             .S = Q.S * S - Q.X * X - Q.Y * Y - Q.Z * Z};
+                          .S = Q.S * S - Q.X * X - Q.Y * Y - Q.Z * Z};
     }
 
     /* Addition with another quaternion */
@@ -362,8 +362,8 @@ public:
     {
         return "(" + std::to_string(X) + ", " 
                    + std::to_string(Y) + ", " 
-                      + std::to_string(Z) + ", " 
-                      + std::to_string(S) + ")";
+                   + std::to_string(Z) + ", " 
+                   + std::to_string(S) + ")";
     }
 };
 
