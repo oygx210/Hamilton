@@ -92,7 +92,11 @@ public:
     /* Checks if the vector is a zero vector */
     constexpr bool IsZeroVector(void) const 
     {
-        return ((X == 0) && (Y == 0) && (Z == 0));	
+        if (X != 0) return false;
+        if (Y != 0) return false;
+        if (Z != 0) return false;
+
+        return true;        
     }
 
     // 
@@ -130,7 +134,7 @@ public:
     }
 
     /* Vector in place addition*/
-    constexpr void operator+=(const Vector3& V)
+    void operator+=(const Vector3& V)
     {
         X += V.X;
         Y += V.Y;
@@ -138,7 +142,7 @@ public:
     }
 
     /* Vector in place subtraction */
-    constexpr void operator-=(const Vector3& V)
+    void operator-=(const Vector3& V)
     {
         X -= V.X;
         Y -= V.Y;
@@ -146,7 +150,7 @@ public:
     }
 
     /* Vector in place multiplcation by scalar*/
-    constexpr void operator*=(double A)
+    void operator*=(double A)
     {
         X *= A;
         Y *= A;
@@ -154,7 +158,7 @@ public:
     }
 
     /* vector in place division by scalar */
-    constexpr void operator/=(double A)
+    void operator/=(double A)
     {
         X /= A;
         Y /= A;
@@ -164,7 +168,10 @@ public:
     /* Vector equality comparison */
     constexpr bool operator==(const Vector3& V) const
     {
-        return ((X == V.X) && (Y == V.Y) && (Z == V.Z));
+        if (X != V.X) return false;
+        if (Y != V.Y) return false;
+        if (Z != V.Z) return false;
+        return true;
     }
 
     /* Vector not equal comparison */

@@ -56,8 +56,8 @@ public:
             return ZERO();
         }
 
-        auto Vc = V.Cross(U);
-        auto Vd = V.Dot(U);
+        const auto Vc = V.Cross(U);
+        const auto Vd = V.Dot(U);
 
         // Vectors are parallel
         if (Vc.NormSquared() == 0.0)
@@ -72,12 +72,12 @@ public:
             }
             else
             {
-                auto Magn = Sqrt(V.Y * V.Y + V.Z * V.Z);
+                const auto Magn = Sqrt(V.Y * V.Y + V.Z * V.Z);
                 return Quaternion{.X = 0, .Y = -V.Y / Magn, .Z = V.Z / Magn, .S = 0.0};
             }
         }
 
-        auto SV = Sqrt(U.NormSquared() * V.NormSquared()) + Vd;
+        const auto SV = Sqrt(U.NormSquared() * V.NormSquared()) + Vd;
 
         return Quaternion{.X = Vc.X, .Y = Vc.Y, .Z = Vc.Z, .S = SV}.Unit();
     }
@@ -92,8 +92,8 @@ public:
      */
     static constexpr Quaternion FromVectorAngle(const Vector3& U, double Angle)
     {
-        auto SAngle = Sin(Angle * 0.5);
-        auto Unit = U.Unit();
+        const auto SAngle = Sin(Angle * 0.5);
+        const auto Unit = U.Unit();
         return Quaternion{.X = Unit.X * SAngle,
                           .Y = Unit.Y * SAngle,
                           .Z = Unit.Z * SAngle,
@@ -117,7 +117,7 @@ public:
     /* Return the unit normalised unit quaternion */
     constexpr Quaternion Unit(void) const
     {
-        double Magn = Norm();
+        const auto Magn = Norm();
 
         if (Magn > 0)
         {
@@ -132,9 +132,9 @@ public:
     /* Rotate a vector using the quaternion*/
     constexpr Vector3 Rotate(const Vector3& U) const
     {
-        auto Tx = Z * U.Y - Y * U.Z;
-        auto Ty = X * U.Z - Z * U.X;
-        auto Tz = Y * U.X - X * U.Y;
+        const auto Tx = Z * U.Y - Y * U.Z;
+        const auto Ty = X * U.Z - Z * U.X;
+        const auto Tz = Y * U.X - X * U.Y;
 
         return Vector3({U.X + 2.0 * (Tx * S + Ty * Z - Tz * Y),
                         U.Y + 2.0 * (Ty * S + Tz * X - Tx * Z),
@@ -144,9 +144,9 @@ public:
     /* Rotate a vector using the implicit inverse quaternion */
     constexpr Vector3 RotateInv(const Vector3& U) const
     {
-        auto Tx = -Z * U.Y + Y * U.Z;
-        auto Ty = -X * U.Z + Z * U.X;
-        auto Tz = -Y * U.X + X * U.Y;
+        const auto Tx = -Z * U.Y + Y * U.Z;
+        const auto Ty = -X * U.Z + Z * U.X;
+        const auto Tz = -Y * U.X + X * U.Y;
 
         return Vector3({U.X + 2.0 * (Tx * S - Ty * Z + Tz * Y),
                         U.Y + 2.0 * (Ty * S - Tz * X + Tx * Z),
@@ -156,8 +156,7 @@ public:
     /* Return the inverse of the quaternion */
     constexpr Quaternion Inverse(void) const
     {
-        auto Magn = Norm();
-
+        const auto Magn = Norm();
         if (Magn > 0)
         {
             return Quaternion{.X = -X / Magn, .Y = -Y / Magn, .Z = -Z / Magn, .S = S / Magn};
@@ -171,25 +170,26 @@ public:
     /* Return the direct cosine matrix representation of the quaternion */
     constexpr Matrix3 DirectCosineMatrix(void) const
     {
-        auto QX2 = X * X;
-        auto QXY = X * Y;
-        auto QXZ = X * Z;
-        auto QXS = X * S;
-        auto QY2 = Y * Y;
-        auto QYZ = Y * Z;
-        auto QYS = Y * S;
-        auto QZ2 = Z * Z;
-        auto QZS = Z * S;
+        const auto QX2 = X * X;
+        const auto QXY = X * Y;
+        const auto QXZ = X * Z;
+        const auto QXS = X * S;
+        const auto QY2 = Y * Y;
+        const auto QYZ = Y * Z;
+        const auto QYS = Y * S;
+        const auto QZ2 = Z * Z;
+        const auto QZS = Z * S;
 
-        return Matrix3{.XX = 1.0 - 2.0 * (QY2 + QZ2),
-                       .XY = 2.0 * (QXY + QZS),
-                       .XZ = 2.0 * (QXZ - QYS),
-                       .YX = 2.0 * (QXY - QZS),
-                       .YY = 1.0 - 2.0 * (QX2 + QZ2),
-                       .YZ = 2.0 * (QYZ + QXS),
-                       .ZX = 2.0 * (QXZ + QYS),
-                       .ZY = 2.0 * (QYZ - QXS),
-                       .ZZ = 1.0 - 2.0 * (QX2 + QY2)} / NormSquared();
+        return Matrix3{
+            .XX = 1.0 - 2.0 * (QY2 + QZ2),
+            .XY = 2.0 * (QXY + QZS),
+            .XZ = 2.0 * (QXZ - QYS),
+            .YX = 2.0 * (QXY - QZS),
+            .YY = 1.0 - 2.0 * (QX2 + QZ2),
+            .YZ = 2.0 * (QYZ + QXS),
+            .ZX = 2.0 * (QXZ + QYS),
+            .ZY = 2.0 * (QYZ - QXS),
+            .ZZ = 1.0 - 2.0 * (QX2 + QY2)} / NormSquared();
     }
 
     /* Return the norm of the quaternion */
@@ -255,7 +255,7 @@ public:
     }
 
     /* In place addition with another quaternion */
-    constexpr void operator+=(const Quaternion& Q)
+    void operator+=(const Quaternion& Q)
     {
         X += Q.X,
         Y += Q.Y;
@@ -264,7 +264,7 @@ public:
     }	
 
     /* In place subtraction with another quaternion */
-    constexpr void operator-=(const Quaternion& Q)
+    void operator-=(const Quaternion& Q)
     {
         X -= Q.X,
         Y -= Q.Y;
@@ -320,7 +320,7 @@ public:
      */	
     constexpr Axis3 EulerAngles() const
     {
-        auto NormSq = NormSquared();
+        const auto NormSq = NormSquared();
 
         // Cant get the euler angles of a zero quaternion
         if (NormSq == 0)
@@ -329,31 +329,25 @@ public:
         }
 
         // Gimbal lock check
-        auto SinPitch = 2.0 * (S * Y - Z * X) / NormSq;
+        const auto SinPitch = 2.0 * (S * Y - Z * X) / NormSq;
 
         // North pole gimbal lock
         if (SinPitch >= 1.0)		
         {
-            double RotX = 0.0;	
-            double RotY = 0.5 * PI;
-            double RotZ = 2.0 * Atan2(X, S);
-            return Axis3 {RotX, RotY, RotZ};
+            return Axis3{0.0, 0.5 * PI, 2.0 * Atan2(X, S)};
         }
         // south pole gimbal lock
         else if (SinPitch <= -1.0)
         {
-            double RotX = 0.0;
-            double RotY = -0.5 * PI;
-            double RotZ = -2.0 * Atan2(X, S);
-            return Axis3 {RotX, RotY, RotZ};
+            return Axis3{0.0, -0.5 * PI, -2.0 * Atan2(X, S)};
         }
         // Not gimbal locked
         else
         {
-            double RotX = Atan2(2.0 * (S * X + Y * Z), 1.0 - 2.0 * (X * X + Y * Y));
-            double RotY = Asin(SinPitch);
-            double RotZ = Atan2(2.0 * (S * Z + X * Y), 1.0 - 2.0 * (Y * Y + Z * Z));
-            return Axis3 {RotX, RotY, RotZ};
+            return Axis3{    
+                Atan2(2.0 * (S * X + Y * Z), 1.0 - 2.0 * (X * X + Y * Y)),
+                Asin(SinPitch),
+                Atan2(2.0 * (S * Z + X * Y), 1.0 - 2.0 * (Y * Y + Z * Z))};
         }
     }
 
