@@ -23,7 +23,7 @@
 inline constexpr Vector3 RotateTranslate(
     const Vector3& VectA,
     const Quaternion& QuatA2B, 
-    const Vector3& TransB)
+    const Vector3& TransB) noexcept
 {
     return QuatA2B.Rotate(VectA) + TransB;
 }
@@ -40,7 +40,7 @@ inline constexpr Vector3 RotateTranslate(
 inline constexpr Vector3 RotateInvTranslate(
     const Vector3& VectA,
     const Quaternion& QuatB2A,
-    const Vector3& TransB)
+    const Vector3& TransB) noexcept
 {
     return QuatB2A.RotateInv(VectA) + TransB;
 }
@@ -56,7 +56,7 @@ inline constexpr Vector3 RotateInvTranslate(
  */
 inline constexpr Vector3 TranslateRotate(const Vector3& VectA, 
                                          const Vector3& TransA, 
-                                         const Quaternion& QuatA2B)
+                                         const Quaternion& QuatA2B) noexcept
 {
     return QuatA2B.Rotate(VectA + TransA);
 }
@@ -72,7 +72,7 @@ inline constexpr Vector3 TranslateRotate(const Vector3& VectA,
  */
 inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA, 
                                             const Vector3& TransA, 
-                                            const Quaternion& QuatB2A)
+                                            const Quaternion& QuatB2A) noexcept
 {
     return QuatB2A.RotateInv(VectA + TransA);
 }
@@ -84,7 +84,7 @@ inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA,
  * rotationalRate: rotational velocity (rad/s) about the z axis
  * offsetTime    : time since alignment of BCBF with BCI (s)
  */
-inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime)
+inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime) noexcept
 {
     return Quaternion::FromVectorAngle(
         Vector3::UNIT_Z(),
@@ -96,7 +96,7 @@ inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime)
  * Inputs:
  * cartesian: (x,y,z) co-ordinates
  */
-inline constexpr Spherical Cart2Sph(const Vector3& Cartesian)
+inline constexpr Spherical Cart2Sph(const Vector3& Cartesian) noexcept
 {
     const auto Radius = Cartesian.Norm();
 
@@ -110,7 +110,7 @@ inline constexpr Spherical Cart2Sph(const Vector3& Cartesian)
  * Inputs:
  * spherical: (r, azm (rad), inc (rad)) co-ordinates
  */
-inline constexpr Vector3 Sph2Cart(const Spherical& Spherical)
+inline constexpr Vector3 Sph2Cart(const Spherical& Spherical) noexcept
 {
     const auto STheta = Sin(Spherical.Azm);
     const auto CTheta = Cos(Spherical.Azm);
@@ -125,30 +125,30 @@ inline constexpr Vector3 Sph2Cart(const Spherical& Spherical)
  * Calculate earth centred, eartg fixed co-ordinates from latitude, 
  * longitude, altitude and ellipsoid radial components
  * Inputs:
- * lla: Latitude, Longitude, Altitude
- * radii: prime vertical radius of curvature (and its complement) 
+ *     LLAVal: Latitude, Longitude, Altitude
+ *     Radii: prime vertical radius of curvature (and its complement) 
  * at the given lla
  */
-inline constexpr Vector3 LLA2BCBF(const LLA& LLA, const EllipsoidRadii& Radii)
+inline constexpr Vector3 LLA2BCBF(const LLA& LLAVal, const EllipsoidRadii& Radii) noexcept
 {
-    const auto CTheta = Cos(D2R(LLA.Lgt));
-    const auto STheta = Sin(D2R(LLA.Lgt));
-    const auto CPhi = Cos(D2R(LLA.Lat));
-    const auto SPhi = Sin(D2R(LLA.Lat));
+    const auto CTheta = Cos(D2R(LLAVal.Lgt));
+    const auto STheta = Sin(D2R(LLAVal.Lgt));
+    const auto CPhi = Cos(D2R(LLAVal.Lat));
+    const auto SPhi = Sin(D2R(LLAVal.Lat));
 
-    return Vector3({(Radii.Azimuthal + LLA.Alt) * CTheta * CPhi,
-                    (Radii.Azimuthal + LLA.Alt) * STheta * CPhi,
-                    (Radii.Inclined + LLA.Alt) * SPhi});
+    return Vector3({(Radii.Azimuthal + LLAVal.Alt) * CTheta * CPhi,
+                    (Radii.Azimuthal + LLAVal.Alt) * STheta * CPhi,
+                    (Radii.Inclined + LLAVal.Alt) * SPhi});
 }
 
 /* 
  * Calculates a quaternion relating body centred, body fixed co-ordinates
  * to East, North, Up co-ordinates
  */
-inline constexpr Quaternion QuatBCBF2ENU(const LLA& LLA)
+inline constexpr Quaternion QuatBCBF2ENU(const LLA& LLAVal) noexcept
 {
-    return Quaternion::FromVectorAngle(Vector3::UNIT_Z(), 0.5 * PI + D2R(LLA.Lgt)) *
-           Quaternion::FromVectorAngle(Vector3::UNIT_X(), 0.5 * PI - D2R(LLA.Lat));
+    return Quaternion::FromVectorAngle(Vector3::UNIT_Z(), 0.5 * PI + D2R(LLAVal.Lgt)) *
+           Quaternion::FromVectorAngle(Vector3::UNIT_X(), 0.5 * PI - D2R(LLAVal.Lat));
            
 }
 
@@ -156,10 +156,10 @@ inline constexpr Quaternion QuatBCBF2ENU(const LLA& LLA)
  * Calculates a quaternion relating body centred, body fixed co-ordinates
  * to East, North, Up co-ordinates
  */
-inline constexpr Quaternion QuatBCBF2ENU(const LLARad& LLA)
+inline constexpr Quaternion QuatBCBF2ENU(const LLARad& LLAVal) noexcept
 {
-    return Quaternion::FromVectorAngle(Vector3::UNIT_Z(), 0.5 * PI + LLA.LgtRad) *
-           Quaternion::FromVectorAngle(Vector3::UNIT_X(), 0.5 * PI - LLA.LatRad);
+    return Quaternion::FromVectorAngle(Vector3::UNIT_Z(), 0.5 * PI + LLAVal.LgtRad) *
+           Quaternion::FromVectorAngle(Vector3::UNIT_X(), 0.5 * PI - LLAVal.LatRad);
            
 }
 
@@ -172,9 +172,10 @@ inline constexpr Quaternion QuatBCBF2ENU(const LLARad& LLA)
  * BCBF        : co-ordinate to be transformed in the BCBF frame
  * BCBFOrigin  : Origin of the local ENU frame in the BCBF frame
  */
-inline constexpr Vector3 BCBF2ENU(const Quaternion& QuatBCBF2ENU, 
-                                  const Vector3& BCBF, 
-                                  const Vector3& BCBFOrigin)
+inline constexpr Vector3 BCBF2ENU(
+    const Quaternion& QuatBCBF2ENU, 
+    const Vector3& BCBF, 
+    const Vector3& BCBFOrigin) noexcept
 {
     return TranslateRotate(BCBF, -BCBFOrigin, QuatBCBF2ENU);
 }
@@ -184,13 +185,13 @@ inline constexpr Vector3 BCBF2ENU(const Quaternion& QuatBCBF2ENU,
  * rotationan quaternion
  * 
  * Inputs:
- * quatBCBF2ENU: quaternion describing rotation BCBF -> ENU
- * ENU         : co-ordinate to be transformed in the local ENU frame
- * BCBFOrigin  : Origin of the local ENU frame in the BCBF frame
+ *     QuatBCBF2ENU: quaternion describing rotation BCBF -> ENU
+ *     ENU         : co-ordinate to be transformed in the local ENU frame
+ *     BCBFOrigin  : Origin of the local ENU frame in the BCBF frame
  */
 inline constexpr Vector3 ENU2BCBF(const Quaternion& QuatBCBF2ENU, 
                                   const Vector3& ENU, 
-                                  const Vector3& BCBFOrigin)
+                                  const Vector3& BCBFOrigin) noexcept
 {
     return RotateInvTranslate(ENU, QuatBCBF2ENU, BCBFOrigin);
 }
@@ -202,7 +203,9 @@ inline constexpr Vector3 ENU2BCBF(const Quaternion& QuatBCBF2ENU,
  * between a source point and a target point 
  * described in ENU frame.
  */
-inline constexpr Spherical CalculateLTPRange(const Vector3& SourceENU, const Vector3& TargetENU)
+inline constexpr Spherical CalculateLTPRange(
+    const Vector3& SourceENU, 
+    const Vector3& TargetENU) noexcept
 {
     const auto DeltaENU = TargetENU - SourceENU;
 
@@ -224,19 +227,19 @@ inline constexpr Spherical CalculateLTPRange(const Vector3& SourceENU, const Vec
  * intermediate step
  * 
  * Inputs: 
- * sourceBCBF: Source (observer) point in body centred, body fixed frame
- * targetBCBF: Target (observed) point in body centred, body fixed frame
- * quatBCBF2ENU: Quaternion describing rotation between source BCBF point
- * and the local tangent plane ENU co-ordinates at this point
+ * SourceBCBF: Source (observer) point in body centred, body fixed frame
+ * TargetBCBF: Target (observed) point in body centred, body fixed frame
+ * QuatBCBF2ENU: Quaternion describing rotation between source BCBF point
+ *     and the local tangent plane ENU co-ordinates at this point
  */
-inline constexpr Spherical CalculateLTPRange(const Vector3& SourceBCBF, 
-                                   const Vector3& TargetBCBF, 
-                                   const Quaternion& QuatBCBF2ENU)
+inline constexpr Spherical CalculateLTPRange(
+    const Vector3& SourceBCBF, 
+    const Vector3& TargetBCBF, 
+    const Quaternion& QuatBCBF2ENU) noexcept
 {
     const auto DeltaENU = BCBF2ENU(QuatBCBF2ENU, TargetBCBF, SourceBCBF);
 
-    const auto TangentialRadiusSq = Pow(DeltaENU.X, 2) 
-                                  + Pow(DeltaENU.Y, 2);
+    const auto TangentialRadiusSq = Pow(DeltaENU.X, 2) + Pow(DeltaENU.Y, 2);
     const auto TangentialRadius = Sqrt(TangentialRadiusSq);
     const auto Range = Sqrt(TangentialRadiusSq + Pow(DeltaENU.Z, 2));
 

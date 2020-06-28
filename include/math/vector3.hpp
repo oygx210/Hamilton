@@ -16,70 +16,70 @@ public:
      * Vector3({.X = X, .Y = Y, .Z = Z}),  or
      * Vector3({}), zero vector
      */
-    constexpr Vector3(const Axis3& In) : Axis3{In} { }
+    constexpr Vector3(const Axis3& In) noexcept: Axis3{In} { }
 
     /* Initialise as a zero vector */
-    static constexpr Vector3 ZERO(void) 
+    static constexpr Vector3 ZERO(void) noexcept
     {
         return Vector3({0.0, 0.0, 0.0});
     }
 
     /* Unit Vector (1, 0, 0) */
-    static constexpr Vector3 UNIT_X(void)	
+    static constexpr Vector3 UNIT_X(void) noexcept
     {
         return Vector3({1.0, 0.0, 0.0});
     }
 
     /* Unit Vector (0, 1, 0) */
-    static constexpr Vector3 UNIT_Y(void)	
+    static constexpr Vector3 UNIT_Y(void) noexcept
     {
         return Vector3({0.0, 1.0, 0.0});
     }
 
     /* Unit vector (0, 0, 1) */
-    static constexpr Vector3 UNIT_Z(void)	
+    static constexpr Vector3 UNIT_Z(void) noexcept
     {
         return Vector3({0.0, 0.0, 1.0});
     }
 
     /* Return the vector norm squared */
-    constexpr double NormSquared(void) const
+    constexpr double NormSquared(void) const noexcept
     {
         return X * X + Y * Y + Z * Z;
     }
 
     /* Return the norm */
-    constexpr double Norm(void) const
+    constexpr double Norm(void) const noexcept
     {
         return Sqrt(NormSquared());
     }
 
     /* Calculate cross product with another vector */
-    constexpr Vector3 Cross(const Vector3& U) const
+    constexpr Vector3 Cross(const Vector3& U) const noexcept
     {
         return Vector3({Y * U.Z - Z * U.Y, -X * U.Z + Z * U.X, X * U.Y - Y * U.X});
     }
 
     /* Calculate cross product of two vectors */
-    constexpr static Vector3 Cross(const Vector3& U, const Vector3& V)
+    constexpr static Vector3 Cross(const Vector3& U, const Vector3& V) noexcept
     {
         return Vector3({U.Y * V.Z - U.Z * V.Y, -U.X * V.Z + U.Z * V.X, U.X * V.Y - U.Y * V.X});
     }
 
     /* Calculate dot product with another vector*/
-    constexpr double Dot(const Vector3& U) const
+    constexpr double Dot(const Vector3& U) const noexcept
     {
         return X * U.X + Y * U.Y + Z * U.Z;
     }
 
     /* Calculate dot product of two vectors*/
-    constexpr static double Dot(const Vector3& U, const Vector3& V)
+    constexpr static double Dot(const Vector3& U, const Vector3& V) noexcept
     {
         return U.X * V.X + U.Y * V.Y + U.Z * V.Z;
     }
 
     /* Return the unit vector */
-    constexpr Vector3 Unit(void) const
+    constexpr Vector3 Unit(void) const noexcept
     {
         const auto Magn = Norm();	
         if (Magn > 0)	
@@ -90,7 +90,7 @@ public:
     }
 
     /* Checks if the vector is a zero vector */
-    constexpr bool IsZeroVector(void) const 
+    constexpr bool IsZeroVector(void) const noexcept
     {
         if (X != 0) return false;
         if (Y != 0) return false;
@@ -104,37 +104,37 @@ public:
     //
 
     /* Vector negation */
-    constexpr Vector3 operator-() const
+    constexpr Vector3 operator-() const noexcept
     {
         return Vector3({-X, -Y, -Z});
     }
 
     /* Vector Addition */
-    constexpr Vector3 operator+(const Vector3& V) const
+    constexpr Vector3 operator+(const Vector3& V) const noexcept
     {
         return Vector3({X + V.X, Y + V.Y, Z + V.Z});
     }
 
     /* Vector subtraction*/
-    constexpr Vector3 operator-(const Vector3& V) const
+    constexpr Vector3 operator-(const Vector3& V) const noexcept
     {
         return Vector3({X - V.X, Y - V.Y, Z - V.Z});
     }
 
     /* Vector multiplication by scalar*/
-    constexpr Vector3 operator*(double A) const
+    constexpr Vector3 operator*(double A) const noexcept
     {
         return Vector3({A * X, A * Y, A * Z});
     }
 
     /* Vector division by scalar*/
-    constexpr Vector3 operator/(double A) const
+    constexpr Vector3 operator/(double A) const noexcept
     {
         return Vector3({X / A, Y / A, Z / A});
     }
 
     /* Vector in place addition*/
-    void operator+=(const Vector3& V)
+    void operator+=(const Vector3& V) noexcept
     {
         X += V.X;
         Y += V.Y;
@@ -142,7 +142,7 @@ public:
     }
 
     /* Vector in place subtraction */
-    void operator-=(const Vector3& V)
+    void operator-=(const Vector3& V) noexcept
     {
         X -= V.X;
         Y -= V.Y;
@@ -150,7 +150,7 @@ public:
     }
 
     /* Vector in place multiplcation by scalar*/
-    void operator*=(double A)
+    void operator*=(double A) noexcept
     {
         X *= A;
         Y *= A;
@@ -158,7 +158,7 @@ public:
     }
 
     /* vector in place division by scalar */
-    void operator/=(double A)
+    void operator/=(double A) noexcept
     {
         X /= A;
         Y /= A;
@@ -166,7 +166,7 @@ public:
     }
 
     /* Vector equality comparison */
-    constexpr bool operator==(const Vector3& V) const
+    constexpr bool operator==(const Vector3& V) const noexcept
     {
         if (X != V.X) return false;
         if (Y != V.Y) return false;
@@ -175,14 +175,14 @@ public:
     }
 
     /* Vector not equal comparison */
-    constexpr bool operator!=(const Vector3& V) const
+    constexpr bool operator!=(const Vector3& V) const noexcept
     {
         return !(*this == V);
     }
 };
 
 /* Vector left multiply by scalar */
-constexpr Vector3 operator*(double A, const Vector3& Rhs)
+constexpr Vector3 operator*(double A, const Vector3& Rhs) noexcept
 {
     return Rhs * A;
 }

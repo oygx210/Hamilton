@@ -17,7 +17,7 @@ namespace Earth
     * 
     * Accurate to around 0.1 - 1 mm
     */
-    inline constexpr double WGS84Radius(double GeodeticInclination)
+    inline constexpr double WGS84Radius(double GeodeticInclination) noexcept
     {
         using namespace EARTH::WGS84;    
 
@@ -36,9 +36,9 @@ namespace Earth
     * needed to convert between ECEF and LLA
     * 
     * Inputs:
-    * inclination: geodetic latitude 
+    * Inclination: geodetic latitude 
     */
-    inline constexpr EllipsoidRadii WGS84RadiiComponents(double Inclination)
+    inline constexpr EllipsoidRadii WGS84RadiiComponents(double Inclination) noexcept
     {
         using namespace EARTH::WGS84;    
 
@@ -57,7 +57,7 @@ namespace Earth
     * Resulting LLA should be accurate to 8 decimal point of latitude, or
     * about 1.1 mm
     */
-    inline constexpr LLA ECEF2LLA(const Vector3& ECEF)
+    inline constexpr LLA ECEF2LLA(const Vector3& ECEF) noexcept
     {
         using namespace EARTH::WGS84;    
 
@@ -65,7 +65,7 @@ namespace Earth
         constexpr double TOLERANCE = 1.0E-8;
 
         // Break loop in case of non convergence    
-        constexpr uint8_t MAXITER = 32;
+        constexpr int MAXITER = 32;
 
         // geodetic longitude (rad)
         const auto Longitude = Atan2(ECEF.Y, ECEF.X);
@@ -91,7 +91,7 @@ namespace Earth
 
         // Main latitude convergence loop
         auto Delta = 2.0 * TOLERANCE;    
-        uint8_t It = 0;
+        int It = 0;
         while (Delta > TOLERANCE)
         {
             // Failed to converge
@@ -119,19 +119,19 @@ namespace Earth
     * Calculate earth centred, eartg fixed co-ordinates from latitude, 
     * longitude, altitude and ellipsoid radial components
     * Inputs:
-    * lla: Latitude, Longitude, Altitude
-    * radii: prime vertical radius of curvature (and its complement) 
+    * LLAVal: Latitude, Longitude, Altitude
+    * Radii: prime vertical radius of curvature (and its complement) 
     *       at the given lla
     */
-    inline constexpr Vector3 LLA2ECEF(const LLA& LLA, const EllipsoidRadii& Radii)    
+    inline constexpr Vector3 LLA2ECEF(const LLA& LLAVal, const EllipsoidRadii& Radii) noexcept
     {
-        return LLA2BCBF(LLA, Radii);
+        return LLA2BCBF(LLAVal, Radii);
     }
 
     /*
     * Calculate a quaternion relating ECI to ECEF
     */
-    inline constexpr Quaternion ECI2ECEF(double TimeOffset)
+    inline constexpr Quaternion ECI2ECEF(double TimeOffset) noexcept
     {
         return BCI2BCBF(EARTH::ROTATIONAL_RATE, TimeOffset);
     }    
@@ -140,17 +140,17 @@ namespace Earth
     * Calculates a quaternion relating earth centred, earth fixed co-ordinates
     * to East, North, Up co-ordinates
     */
-    inline constexpr Quaternion QuatECEF2ENU(const LLA& LLA)
+    inline constexpr Quaternion QuatECEF2ENU(const LLA& LLAVal) noexcept
     {
-        return QuatBCBF2ENU(LLA);
+        return QuatBCBF2ENU(LLAVal);
     }
 
     /* 
     * Calculates a quaternion relating earth centred, earth fixed co-ordinates
     * to East, North, Up co-ordinates (radians)
     */
-    inline constexpr Quaternion QuatECEF2ENU(const LLARad& LLA)
+    inline constexpr Quaternion QuatECEF2ENU(const LLARad& LLAVal) noexcept
     {
-        return QuatBCBF2ENU(LLA);
+        return QuatBCBF2ENU(LLAVal);
     }    
 }

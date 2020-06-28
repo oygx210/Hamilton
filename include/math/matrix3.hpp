@@ -12,13 +12,13 @@ class Matrix3
 {
 public:
     /* Returns an identity matrix */
-    static constexpr Matrix3 IDENTITY(void)
+    static constexpr Matrix3 IDENTITY(void) noexcept
     {
         return Matrix3{.XX = 1.0, .YY = 1.0, .ZZ = 1.0};
     }
 
     /* Returns a zero matrix */
-    static constexpr Matrix3 ZERO(void)
+    static constexpr Matrix3 ZERO(void) noexcept
     {
         return Matrix3{.XX = 0.0, .XY = 0.0, .XZ = 0.0, 
                        .YX = 0.0, .YY = 0.0, .YZ = 0.0, 
@@ -39,7 +39,7 @@ public:
     double ZZ = 0.0;
     
     /* Return the determinant of the matrix */	
-    constexpr double Determinant(void) const
+    constexpr double Determinant(void) const noexcept
     {
         return XX * (YY * ZZ - YZ * ZY) 
               - XY * (YX * ZZ - YZ * ZX) 
@@ -47,7 +47,7 @@ public:
     }
 
     /* Return matrix transpose */
-    constexpr Matrix3 Transpose(void) const
+    constexpr Matrix3 Transpose(void) const noexcept
     {
         return Matrix3{.XX = XX, .XY = YX, .XZ = ZX, 
                           .YX = XY, .YY = YY, .YZ = ZY, 
@@ -55,7 +55,7 @@ public:
     }
 
     /* Outer product of two vectors */
-    constexpr static Matrix3 Outer(const Vector3& U, const Vector3& V)
+    constexpr static Matrix3 Outer(const Vector3& U, const Vector3& V) noexcept
     {
         return Matrix3{ .XX = U.X * V.X, .XY = U.X * V.Y, .XZ = U.X * V.Z,
                         .YX = U.Y * V.X, .YY = U.Y * V.Y, .YZ = U.Y * V.Z,
@@ -73,7 +73,7 @@ public:
     //	
 
     /* Multiplication by matrix */
-    constexpr Matrix3 operator*(const Matrix3& Mat) const
+    constexpr Matrix3 operator*(const Matrix3& Mat) const noexcept
     {
         return Matrix3{
             .XX = XX * Mat.XX + XY * Mat.YX + XZ * Mat.ZX,
@@ -88,7 +88,7 @@ public:
     }
 
     /* Multiplication by axis */
-    constexpr Axis3 operator*(const Axis3& Vect) const
+    constexpr Axis3 operator*(const Axis3& Vect) const noexcept
     {
         return Axis3{.X = XX * Vect.X + XY * Vect.Y + XZ * Vect.Z,
                      .Y = YX * Vect.X + YY * Vect.Y + YZ * Vect.Z,
@@ -96,7 +96,7 @@ public:
     }
 
     /* Multiplication by vector */
-    constexpr Vector3 operator*(const Vector3& Vect) const
+    constexpr Vector3 operator*(const Vector3& Vect) const noexcept
     {
         return Vector3({.X = XX * Vect.X + XY * Vect.Y + XZ * Vect.Z,
                         .Y = YX * Vect.X + YY * Vect.Y + YZ * Vect.Z,
@@ -104,7 +104,7 @@ public:
     }	
 
     /* Multiplication by scalar */
-    constexpr Matrix3 operator*(double A) const
+    constexpr Matrix3 operator*(double A) const noexcept
     {
         return Matrix3{.XX = A * XX, .XY = A * XY, .XZ = A * XZ, 
                        .YX = A * YX, .YY = A * YY, .YZ = A * YZ, 
@@ -112,7 +112,7 @@ public:
     }
 
     /* Division by Scalar */
-    constexpr Matrix3 operator/(double A) const
+    constexpr Matrix3 operator/(double A) const noexcept
     {
         return Matrix3{.XX = XX / A, .XY = XY / A, .XZ = XZ / A, 
                        .YX = YX / A, .YY = YY / A, .YZ = YZ / A, 
@@ -120,7 +120,7 @@ public:
     }
 
     /* Addition with matrix */
-    constexpr Matrix3 operator+(const Matrix3& Mat) const
+    constexpr Matrix3 operator+(const Matrix3& Mat) const noexcept
     {
         return Matrix3{.XX = XX + Mat.XX, .XY = XY + Mat.XY, .XZ = XZ + Mat.XZ, 
                        .YX = YX + Mat.YX, .YY = YY + Mat.YY, .YZ = YZ + Mat.YZ, 
@@ -128,7 +128,7 @@ public:
     }
 
     /* Substraction with matrix */
-    constexpr Matrix3 operator-(const Matrix3& Mat) const
+    constexpr Matrix3 operator-(const Matrix3& Mat) const noexcept
     {
         return Matrix3{.XX = XX - Mat.XX, .XY = XY - Mat.XY, .XZ = XZ - Mat.XZ, 
                        .YX = YX - Mat.YX, .YY = YY - Mat.YY, .YZ = YZ - Mat.YZ, 
@@ -136,7 +136,7 @@ public:
     }
     
     /* Negation */
-    constexpr Matrix3 operator-(void) const
+    constexpr Matrix3 operator-(void) const noexcept
     {
         return Matrix3{.XX = -XX, .XY = -XY, .XZ = -XZ, 
                        .YX = -YX, .YY = -YY, .YZ = -YZ, 
@@ -144,7 +144,7 @@ public:
     }
 
     /* Equality comparison */
-    constexpr bool operator==(const Matrix3& Mat) const
+    constexpr bool operator==(const Matrix3& Mat) const noexcept
     {
         return ((XX == Mat.XX) && (XY == Mat.XY) && (XZ == Mat.XZ) &&
                 (YX == Mat.YX) && (YY == Mat.YY) && (YZ == Mat.YZ) &&
@@ -152,12 +152,12 @@ public:
     }
 
     /* Inequality comparison */		
-    constexpr bool operator!=(const Matrix3& Mat) const
+    constexpr bool operator!=(const Matrix3& Mat) const noexcept
     {
         return !(*this == Mat);
     }
 
-    std::string ToString() const
+    std::string ToString() const noexcept
     {
         return "[" + std::to_string(XX) + ", " 
                    + std::to_string(XY) + ", " 
@@ -172,7 +172,7 @@ public:
 };
 
 /* Multiplication by scalar on left*/
-constexpr Matrix3 operator*(double A, const Matrix3& Mat)
+constexpr Matrix3 operator*(double A, const Matrix3& Mat) noexcept
 {
     return Mat * A;
 }

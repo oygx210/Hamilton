@@ -11,7 +11,7 @@
  * 
  */
 template <typename T>
-constexpr bool IsNear(T X, T Y, T Error)
+constexpr bool IsNear(T X, T Y, T Error) noexcept
 {
     if (Fabs(X - Y) < Error) return true;
     return false;
@@ -20,7 +20,7 @@ constexpr bool IsNear(T X, T Y, T Error)
 /* 
  * Element wise compile time is near comparison for vectors
  */
-constexpr bool IsVector3Near(const Vector3& V1, const Vector3& V2, double Error)
+constexpr bool IsVector3Near(const Vector3& V1, const Vector3& V2, double Error) noexcept
 {
     return (IsNear(V1.X, V2.X, Error) && 
             IsNear(V1.Y, V2.Y, Error) && 
@@ -30,7 +30,7 @@ constexpr bool IsVector3Near(const Vector3& V1, const Vector3& V2, double Error)
 /* 
  * Element wise compile time is near comparison for quaternions
  */
-constexpr bool IsQuaternionNear(const Quaternion& Q1, const Quaternion& Q2, double Error)
+constexpr bool IsQuaternionNear(const Quaternion& Q1, const Quaternion& Q2, double Error) noexcept
 {
     return (IsNear(Q1.X, Q2.X, Error) && 
             IsNear(Q1.Y, Q2.Y, Error) && 
@@ -41,7 +41,7 @@ constexpr bool IsQuaternionNear(const Quaternion& Q1, const Quaternion& Q2, doub
 /* 
  * Element wise compile time is near comparison for 3 x 3 matrices
  */
-constexpr bool IsMatrix3Near(const Matrix3& M1, const Matrix3& M2, double Error)
+constexpr bool IsMatrix3Near(const Matrix3& M1, const Matrix3& M2, double Error) noexcept
 {
     return (IsNear(M1.XX, M2.XX, Error) && 
             IsNear(M1.XY, M2.XY, Error) && 

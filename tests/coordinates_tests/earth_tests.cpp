@@ -76,71 +76,71 @@ TEST(Earth, ECEF2LLA)
     // Equator (prime meridian)
     {
         constexpr auto ECEF = Vector3({EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, 0.0, 1.0E-8));
-        static_assert(LLA.Lgt == 0.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == 0.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }
 
     // Equator (anti meridian)
     {
         constexpr auto ECEF = Vector3({-EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, 0.0, 1.0E-8));
-        static_assert(LLA.Lgt == 180.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == 180.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }    
 
     // Equator (+90 deg)
     {
         constexpr auto ECEF = Vector3({0.0, EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, 0.0, 1.0E-8));
-        static_assert(LLA.Lgt == 90.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == 90.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }
 
     // Equator (-90 deg)
     {
         constexpr auto ECEF = Vector3({0.0, -EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, 0.0, 1.0E-8));
-        static_assert(LLA.Lgt == -90.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == -90.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }        
 
     // North Pole
     {
         constexpr auto ECEF = Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MINOR_AXIS});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, 90.0, 1.0E-8));
-        static_assert(LLA.Lgt == 0.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, 90.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == 0.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }    
 
     // South Pole
     {
         constexpr auto ECEF = Vector3({0.0, 0.0, -EARTH::WGS84::SEMI_MINOR_AXIS});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, -90.0, 1.0E-8));
-        static_assert(LLA.Lgt == 0.0);
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-8));
+        static_assert(IsNear(LLAVal.Lat, -90.0, 1.0E-8));
+        static_assert(LLAVal.Lgt == 0.0);
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-8));
     }       
 
     // Brisbane
     {
         constexpr auto ECEF = Vector3({-5047162.36, 2568329.79, -2924521.17});
-        constexpr auto LLA = Earth::ECEF2LLA(ECEF);
+        constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
-        static_assert(IsNear(LLA.Lat, -27.47, 1.0E-2));
-        static_assert(IsNear(LLA.Lgt, 153.03, 1.0E-2));
-        static_assert(IsNear(LLA.Alt, 0.0, 1.0E-2));
+        static_assert(IsNear(LLAVal.Lat, -27.47, 1.0E-2));
+        static_assert(IsNear(LLAVal.Lgt, 153.03, 1.0E-2));
+        static_assert(IsNear(LLAVal.Alt, 0.0, 1.0E-2));
     }     
 }
 

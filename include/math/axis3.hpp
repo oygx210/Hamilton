@@ -16,13 +16,13 @@ public:
     double Z = 0.0;
 
     /* Initialise with all zero components */
-    constexpr static Axis3 ZERO(void) 
+    constexpr static Axis3 ZERO(void) noexcept
     {
         return Axis3 {0.0, 0.0, 0.0};
     }
     
     /* Get a string representation of the axis type */	
-    std::string ToString(void) const
+    std::string ToString(void) const noexcept
     {
         return "(" + std::to_string(X) + ", " 
                    + std::to_string(Y) + ", " 
