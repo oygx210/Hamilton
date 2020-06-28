@@ -48,16 +48,16 @@ public:
     constexpr Vector3 UnitZ(void) const {return Vector3({mDCM.XZ, mDCM.YZ, mDCM.ZZ});}    
 
     /* 
-	 * Get the euler angle (roll, pitch, yaw) representation of the quaternion 
-	 * describing the transformation between two frames.
-	 * 
-	 * Returns the rotations (counterclockwise) around the x, y, and z axis respectively
-	 * 
-	 * Assumes Body 3-2-1 sequence, i.e the resulting angles are determined by the sequence of
-	 * 3: Yaw about z axis
-	 * 2: Pitch about y axis
-	 * 1: Roll about x axis
-	 */	
+     * Get the euler angle (roll, pitch, yaw) representation of the quaternion 
+     * describing the transformation between two frames.
+     * 
+     * Returns the rotations (counterclockwise) around the x, y, and z axis respectively
+     * 
+     * Assumes Body 3-2-1 sequence, i.e the resulting angles are determined by the sequence of
+     * 3: Yaw about z axis
+     * 2: Pitch about y axis
+     * 1: Roll about x axis
+     */	
     constexpr Axis3 EulerAngles(void) const {return mQuat.EulerAngles();}
 
     // Rotate a vector using the cached rotation matrix
@@ -66,7 +66,7 @@ public:
     // Rotate a vector implicitly using the inverse quaternion
     constexpr Vector3 RotateInv(const Vector3& U) const 
     {
-		return mQuat.RotateInv(U);
+        return mQuat.RotateInv(U);
     }    
 
     // Get the quaternion representation
@@ -75,45 +75,45 @@ public:
     /* 
      * Return the direct cosine matrix representation of the quaternion 
      */
-	constexpr const Matrix3& DirectCosineMatrix(void) const {return mDCM;}
+    constexpr const Matrix3& DirectCosineMatrix(void) const {return mDCM;}
 
     /*
-	 * Explicit initialiser to generate a quaternion which describes the minimum 
-	 * co-ordinate transformation between two frames O -> M by using a vector with
-	 * components known in both frames. Follows a right handed co-ordinate frame.
-	 * 
-	 * Inputs:
-	 * Vector3 U, reference vector represented in frame O
-	 * Vector3 V, reference vector represented in frame M
-	 */
-	static constexpr Rotator FromVectorPair(const Vector3& U, const Vector3& V) 
+     * Explicit initialiser to generate a quaternion which describes the minimum 
+     * co-ordinate transformation between two frames O -> M by using a vector with
+     * components known in both frames. Follows a right handed co-ordinate frame.
+     * 
+     * Inputs:
+     * Vector3 U, reference vector represented in frame O
+     * Vector3 V, reference vector represented in frame M
+     */
+    static constexpr Rotator FromVectorPair(const Vector3& U, const Vector3& V) 
     {
         return Rotator{Quaternion::FromVectorPair(U, V)};
     }
 
-	/* 
-	 * Explicit initialiser to generate a quaternion which describes the rotation
-	 * of a co-ordinate frame about an eigenaxis
-	 * 
-	 * Inputs:
-	 * Vector3 U, eigenaxis to rotate frame about
-	 * double Angle, counterclockwise rotation in radians of the frame about the eigenaxis
-	 */
-	static constexpr Rotator FromVectorAngle(const Vector3& U, double Angle)
+    /* 
+     * Explicit initialiser to generate a quaternion which describes the rotation
+     * of a co-ordinate frame about an eigenaxis
+     * 
+     * Inputs:
+     * Vector3 U, eigenaxis to rotate frame about
+     * double Angle, counterclockwise rotation in radians of the frame about the eigenaxis
+     */
+    static constexpr Rotator FromVectorAngle(const Vector3& U, double Angle)
     {
         return Rotator{Quaternion::FromVectorAngle(U, Angle)};
     }
 
     /* Return the inverse rotator */
-	constexpr Rotator Inverse(void) const 
+    constexpr Rotator Inverse(void) const 
     {
         return Rotator({.X = -X(), .Y = -Y(), .Z = -Z(), .S = S()});
     }
 
-	/*
-	 * Explicit initialiser for an identity quaternion
-	 */
-	static constexpr Rotator IDENTITY(void) {return Rotator(Quaternion::IDENTITY(), Matrix3::IDENTITY());}
+    /*
+     * Explicit initialiser for an identity quaternion
+     */
+    static constexpr Rotator IDENTITY(void) {return Rotator(Quaternion::IDENTITY(), Matrix3::IDENTITY());}
 
     /*
      * Compose a set of rotators together, performs only a single direct cosine matrix calculation
@@ -125,16 +125,16 @@ public:
     }
 
     /* Equality Comparison */	
-	constexpr bool operator==(const Rotator& Rot) const
-	{
+    constexpr bool operator==(const Rotator& Rot) const
+    {
         return (AsQuaternion() == Rot.AsQuaternion());
-	}
+    }
 
-	/* Inequality comparison */
-	constexpr bool operator!=(const Rotator& Rot) const
-	{
-		return (AsQuaternion() != Rot.AsQuaternion());
-	}    
+    /* Inequality comparison */
+    constexpr bool operator!=(const Rotator& Rot) const
+    {
+        return (AsQuaternion() != Rot.AsQuaternion());
+    }    
 
 private:
 
