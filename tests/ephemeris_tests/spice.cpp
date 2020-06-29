@@ -17,13 +17,18 @@ TEST(Spice, GetEphemerisState)
 
     {
         // Load Kernels    
-        auto Kernels = Spice::KernelSet(
-            std::string_view(DEFAULT_LEAP_SECOND_KERNAL),                                                                                                 // Leap seconds kernel
-            std::string_view(std::string(PROJECT_DIR) + std::string("/data/spice/gateway_nrho_reference/receding_horiz_3189_1burnApo_DiffCorr_15yr.bsp")) // Gateway
-        );
+        Spice::KernelSet Kernels{ };
+        Kernels.LoadAuxillaryData(DEFAULT_LEAP_SECOND_KERNAL); // Leap seconds kernel
+        Kernels.LoadEphemerisData(std::string(PROJECT_DIR) 
+            + std::string("/data/spice/gateway_nrho_reference/receding_horiz_3189_1burnApo_DiffCorr_15yr.bsp")); // Gateway
 
+        // Display contents
+        for (const auto& Meta : Kernels.GetMetadata())
+        {
+            puts(Meta.second.PrettyString().c_str());
+        }
         
-        // Calculate initial epoch        
+        // // Calculate initial epoch        
         double EpochTime = Spice::Date2Epoch("2024 June 10, 13:00:00 PST");
 
         EphemerisState Result = GatewayEphemeris.GetState(EpochTime);

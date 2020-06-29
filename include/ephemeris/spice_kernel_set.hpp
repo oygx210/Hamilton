@@ -1,52 +1,73 @@
 #pragma once
 
 #include <vector>
-#include <string_view>
-#include "ephemeris/spice_imports.hpp"
+#include <map>
+#include <string>
 
 namespace Spice
-{
+{    
+    /* 
+     * Stores an ephemeris time interval 
+     * endpoints are given in seconds relative to the reference epoch
+     */
+    struct TimeInterval
+    {
+        // Interval start time (s)    
+        double Start = 0.0;
+
+        // Interval stop time (s)
+        double Stop = 0.0;
+    };
+
+    /* 
+     * Stores the metadata of a spice object
+     */
+    struct ObjectMetadata
+    {
+        // Spice Kernel from which this object was loaded
+        std::string_view Kernel;
+
+        // Unique spice object integer ID
+        int ID = std::numeric_limits<int>::min();
+
+        // List of time intervals        
+        std::vector<TimeInterval> Intervals;
+
+        // Get the metadata as a pretty formatted string
+        std::string PrettyString(void) const;        
+    };
+
     /* 
     * Scoped loading, unloading of Spice Kernels
+    * 
+    * Also stores the metadata in a more accesible format than the default c interface
     */
     class KernelSet
     {
     public:    
         // Default Constructor
-        KernelSet() { }
-
+        KernelSet();
+        
+        // Unload all when the kernel set goes out of scope
+        ~KernelSet();
+        
         // Disable Copy Constructor
         KernelSet(const KernelSet& Other) = delete;
 
-        // Load all when the kernel set is constructed
-        // See C++ parameter packs for an explanation of the syntax
-        template <typename... Args>
-        KernelSet(const Args&... Kernels)
-        {
-            // Disable abort on error
-            SpiceChar ErrorMode[] = "REPORT";
-            erract_c("SET", sizeof(ErrorMode), ErrorMode);
+        // Loads an spk kernel (.bsp) containing ephemeris data
+        bool LoadEphemerisData(const std::string& Kernel);
 
-            // Parameterically store each kernel string
-            (mKernels.emplace_back(Kernels), ...);
+        // Load an auxillary data file such as a leap seconds kernel
+        bool LoadAuxillaryData(const std::string& Kernel);
 
-            // Load each Kernel
-            for(const auto& Kernel : mKernels)
-            {
-                furnsh_c(Kernel.data());
-            }        
-        }
-
-        // Unload all when the kernel set goes out of scope
-        ~KernelSet()
-        {
-            for(const auto& Kernel : mKernels)
-            {
-                unload_c(Kernel.data());
-            }
-        }
+        // Get a reference to the contained metadata
+        const std::map<int, ObjectMetadata>& GetMetadata(void) const {return mMeta;}
         
     private:
+        // A list of all kernel files loaded
         std::vector<std::string_view> mKernels;
+
+        // All object metadata
+        std::map<int, ObjectMetadata> mMeta;
     };
 }

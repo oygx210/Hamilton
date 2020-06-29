@@ -50,9 +50,9 @@ inline constexpr Vector3 RotateInvTranslate(
  * then rotates it to frame B via the quaternion quatA2B
  * 
  * Inputs:
- *  vectA   : original vector u_A in frame A
- *  transA  : offset v_A to translate u_A by 
- *  quatA2B : quaternion describing rotation between frames A -> B
+ *  VectA   : original vector u_A in frame A
+ *  TransA  : offset v_A to translate u_A by 
+ *  QuatA2B : quaternion describing rotation between frames A -> B
  */
 inline constexpr Vector3 TranslateRotate(const Vector3& VectA, 
                                          const Vector3& TransA, 
@@ -66,9 +66,9 @@ inline constexpr Vector3 TranslateRotate(const Vector3& VectA,
  * then rotates it to frame B via the quaternion quatB2A
  * 
  * Inputs:
- *  vectA   : original vector u_A in frame A
- *  transA  : offset v_A to translate u_A by 
- *  quatB2A : quaternion describing rotation between frames B -> A 
+ *  VectA   : original vector u_A in frame A
+ *  TransA  : offset v_A to translate u_A by 
+ *  QuatB2A : quaternion describing rotation between frames B -> A 
  */
 inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA, 
                                             const Vector3& TransA, 
@@ -81,8 +81,8 @@ inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA,
  * Calculates a quaternion relating a Body Centred Inertial 
  * to Body centred, body fixed frame
  * Inputs:
- * rotationalRate: rotational velocity (rad/s) about the z axis
- * offsetTime    : time since alignment of BCBF with BCI (s)
+ * RotationalRate: rotational velocity (rad/s) about the z axis
+ * OffsetTime    : time since alignment of BCBF with BCI (s)
  */
 inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime) noexcept
 {
@@ -94,7 +94,7 @@ inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime) n
 /* 
  * Calculate spherical coordinates from cartesian
  * Inputs:
- * cartesian: (x,y,z) co-ordinates
+ * Cartesian: (x,y,z) co-ordinates
  */
 inline constexpr Spherical Cart2Sph(const Vector3& Cartesian) noexcept
 {
@@ -108,7 +108,7 @@ inline constexpr Spherical Cart2Sph(const Vector3& Cartesian) noexcept
 /* 
  * Calculate Cartesion co-ordinates from spherical
  * Inputs:
- * spherical: (r, azm (rad), inc (rad)) co-ordinates
+ * Spherical: (r, azm (rad), inc (rad)) co-ordinates
  */
 inline constexpr Vector3 Sph2Cart(const Spherical& Spherical) noexcept
 {

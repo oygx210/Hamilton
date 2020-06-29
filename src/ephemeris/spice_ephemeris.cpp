@@ -1,8 +1,8 @@
 #include "ephemeris/spice_ephemeris.hpp"
 
-SpiceEphemeris::SpiceEphemeris(const std::string_view& Object, 
-                               const std::string_view& Frame, 
-                               const std::string_view& Reference) :
+SpiceEphemeris::SpiceEphemeris(const std::string& Object, 
+                               const std::string& Frame, 
+                               const std::string& Reference) :
     mObjectID{Object},
     mFrame{Frame},
     mReference{Reference}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string_view>
+#include <string>
 #include <vector>
 #include <cstdio>
 #include "ephemeris.hpp"
@@ -15,9 +15,9 @@ class SpiceEphemeris: public Ephemeris
 public:
 
     // Initialise using spice object ID, default frame ID and default relative object
-    SpiceEphemeris(const std::string_view& Object, 
-                   const std::string_view& Frame, 
-                   const std::string_view& Reference);
+    SpiceEphemeris(const std::string& Object, 
+                   const std::string& Frame, 
+                   const std::string& Reference);
 
     // Default constructor
     SpiceEphemeris();
@@ -32,7 +32,7 @@ public:
     EphemerisState GetState(double EpochTime) const;
 
 private:
-    std::string_view mObjectID; // Spice object ID
-    std::string_view mFrame;          // Reference object frame ID
-    std::string_view mReference;      // Reference object Spice ID
+    std::string mObjectID; // Spice object ID
+    std::string mFrame;          // Reference object frame ID
+    std::string mReference;      // Reference object Spice ID
 };
