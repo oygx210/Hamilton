@@ -1,13 +1,10 @@
 
-add_library(HEphemerisLib STATIC "")
+add_library(HEphemerisLib "")
 
 target_sources(HEphemerisLib
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/spice_ephemeris.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/time.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/spice_label_map.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/spice_kernel_set.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/spice.cpp
 )
 
 # Link spice to the Ephemeris library
-target_link_libraries(HEphemerisLib PRIVATE Spice)
+target_link_libraries(HEphemerisLib PRIVATE CppSpice)

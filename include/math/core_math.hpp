@@ -159,7 +159,7 @@ inline constexpr T Pow(T Val, S Expn) noexcept
 DISABLE_WARNING_POP
 
 /*
- * float modulus
+ * Float modulus
  */
 template <typename T>
 inline constexpr T Fmod(T Val, T Divisor) noexcept

@@ -1,7 +1,8 @@
-#include "ephemeris/spice_kernel_set.hpp"
-#include "ephemeris/spice_ephemeris.hpp"
-#include "ephemeris/spice_label_map.hpp"
-#include "ephemeris/time.hpp"
+#include "spice_kernel_set.hpp"
+#include "spice_ephemeris.hpp"
+#include "spice_label_map.hpp"
+#include "spice_time.hpp"
+#include "ephemeris/spice.hpp"
 #include "test_utils.hpp"
 #include "gtest/gtest.h"
 
@@ -10,23 +11,18 @@
 TEST(Spice, GetEphemerisState)
 {
     // Create ephemeris        
-    auto GatewayEphemeris = SpiceEphemeris(
-        Spice::GetObjectString(Spice::ObjectID::GATEWAY), 
-        "J2000", 
-        Spice::GetObjectString(Spice::ObjectID::EARTH));    
+    auto GatewayEphemeris = SpiceEphemeris({
+        .Object = Spice::GetObjectString(Spice::ObjectID::GATEWAY), 
+        .Frame = Spice::GetFrameString(Spice::FrameID::J2000), 
+        .Reference = Spice::GetObjectString(Spice::ObjectID::EARTH)
+    });    
 
     {
         // Load Kernels    
         Spice::KernelSet Kernels{ };
-        Kernels.LoadAuxillaryData(DEFAULT_LEAP_SECOND_KERNAL); // Leap seconds kernel
-        Kernels.LoadEphemerisData(std::string(PROJECT_DIR) 
+        Kernels.LoadAuxillary(DEFAULT_LEAP_SECOND_KERNAL); // Leap seconds kernel
+        Kernels.LoadEphemeris(std::string(PROJECT_DIR) 
             + std::string("/data/spice/gateway_nrho_reference/receding_horiz_3189_1burnApo_DiffCorr_15yr.bsp")); // Gateway
-
-        // Display contents
-        for (const auto& Meta : Kernels.GetMetadata())
-        {
-            puts(Meta.second.PrettyString().c_str());
-        }
         
         // // Calculate initial epoch        
         double EpochTime = Spice::Date2Epoch("2024 June 10, 13:00:00 PST");

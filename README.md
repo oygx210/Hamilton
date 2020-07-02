@@ -35,7 +35,7 @@ Hamilton is named after Margaret Hamilton, lead flight software developer for th
 ## Installing and Building
 The below assumes you are using a unix like command line interface. Alternatively you can download the Windows CMake gui and use Microsoft Visual Studio as the generator. It is further assumed that you are using cmake.
 
-* Clone the repo
+* Clone the repo using the `--recurse-submodules` flag
 * From the main project directory create a new build directory and navigate into it: `mkdir build && cd build`
 * Configure using CMake `cmake .. -G <Generator>`, where <Generator> should be replaced with your generator of choice. Run `cmake -h` for a list of options
 * Build with `cmake --build .`

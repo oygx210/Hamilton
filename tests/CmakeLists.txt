@@ -77,4 +77,4 @@ endif()
 add_subdirectory("${GTEST_DIR}" "${CMAKE_BINARY_DIR}/googletest")
 
 # Link Google Test libraries to the executable
-target_link_libraries(HTestExec PRIVATE Spice HEphemerisLib gtest_main gtest)
+target_link_libraries(HTestExec PRIVATE CppSpice HEphemerisLib gtest_main gtest)

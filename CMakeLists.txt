@@ -31,14 +31,14 @@ endif()
 set(APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
 list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
 list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/extern/gcem/include")
-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/extern/spice/include")
+list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/extern/cppSpice/include")
 include_directories(${APP_INCLUDE_DIRS})
 
 # add compile time math library
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/gcem")
 
-# Add JPL Ephemeris library
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/spice")
+# Add JPL Ephemeris C++ wrapper library
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/cppSpice")
 
 # Add submodule libraries
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/ephemeris")
