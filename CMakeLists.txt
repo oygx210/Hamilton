@@ -42,6 +42,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/cppSpice")
 
 # Add submodule libraries
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/ephemeris")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/disturbances")
 
 # Add the Gtest sources and the gnc tests
 # TODO: Want to use gtest as an external library from within the test directory only
