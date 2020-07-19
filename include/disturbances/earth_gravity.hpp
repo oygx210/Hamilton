@@ -2,25 +2,62 @@
 
 #include "disturbances/gravity.hpp"
 
+#include "math/constants.hpp"
+#include "math/core_math.hpp"
+#include "math/vector3.hpp"
+#include "math/spherical.hpp"
+
 enum class HarmonicOrder
 {
     SPHERICAL, // Newtonian
-    SECOND,    // Second order harmonics
+    SECOND,    // Second order harmonics 
     THIRD      // Third order harmonics
 };
 
-/** 
+/* 
  * Gravitational model for the earth
- *
- * UNTESTED: 18 Jul 2020 
+ * 
+ * Uses the dominant terms modal harmonic terms for an approximate and efficient earth gravitation model
+ * 
  */
-template <HarmonicOrder Order = HarmonicOrder::SECOND>
-class EarthGravity: public GravityModel
+template <HarmonicOrder Order> 
+class OblateEarthGravity: public GravityModel
 {
 public:
 
-    /** Update the cached value of gravitational acceleration */
-    void Update(const Spherical& Sph, const TrigComponents& Trig);
+    constexpr OblateEarthGravity() {}
+
+    constexpr static Vector3 CalculateAcceleration(const Spherical& Sph, const TrigComponents& Trig) noexcept
+    {
+        // Newtonian contribution    
+        double AccelerationRadial = -EARTH::GRAVITATIONAL_CONSTANT / (Sph.Rad * Sph.Rad);
+        double AccelerationInclined = 0.0;
+
+        // Higher order contributions
+        if constexpr (Order != HarmonicOrder::SPHERICAL)
+        {
+            // Calculate radius^4 (km^4)
+            double Radius = Sph.Rad * 1.0E-3;
+            double RadiusQuart = Radius;
+            RadiusQuart *= RadiusQuart;
+            RadiusQuart *= RadiusQuart;
+            double SinInc2 = Trig.SinInc * Trig.SinInc;
+        
+            // Second order contribution    
+            AccelerationInclined -= J2 * 3.0 * Trig.CosInc * Trig.SinInc / RadiusQuart * 1.0E3;
+            AccelerationRadial += J2 * 1.5 * (3.0 * SinInc2 - 1.0) / RadiusQuart * 1.0E3;
+
+            // Third order contribution
+            if constexpr (Order == HarmonicOrder::THIRD)
+            {
+                double RadiusPent = RadiusQuart * Radius;
+                AccelerationInclined -= J3 * 1.5 * Trig.CosInc * (5.0 * SinInc2 - 1.0) / RadiusPent * 1.0E3;
+                AccelerationRadial += J3 * 2.0 * (5.0 * SinInc2 - 3.0) / RadiusPent * 1.0E3;
+            }        
+        }
+
+        return Vector3({0.0, AccelerationInclined, AccelerationRadial});
+    }
 
 private:
     // JGM3 Coefficients

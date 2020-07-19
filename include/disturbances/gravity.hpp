@@ -3,21 +3,14 @@
 #include "math/vector3.hpp"
 #include "math/spherical.hpp"
 
-/** 
+/* 
  * Base class for a gravitational model
  */
 class GravityModel
 {
 public:
-    /** Get acceleration (m/s2) */
-    constexpr const Vector3& Acceleration(void) const noexcept {return mAcceleration;}
+    virtual ~GravityModel() {}
 
-    /** Update the cached value of gravitational acceleration */
-    virtual void Update(const Spherical& Sph, const TrigComponents& Trig) = 0;
-
-private:
-
-    // (m/s2)
-    Vector3 mAcceleration;
-    
+    /* Acceleration (m/s2) in ENU co-ordinates */
+    virtual static Vector3 CalculateAcceleration(const Spherical& Sph, const TrigComponents& Trig) noexcept = 0;
 };

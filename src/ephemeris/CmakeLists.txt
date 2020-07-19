@@ -8,3 +8,8 @@ target_sources(HEphemerisLib
 
 # Link spice to the Ephemeris library
 target_link_libraries(HEphemerisLib PRIVATE CppSpice)
+
+# install(TARGETS HEphemerisLib CppSpice Spice
+#         RUNTIME DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIR}/bin"
+#         LIBRARY DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIR}/lib"
+#         ARCHIVE DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIR}/lib/static")

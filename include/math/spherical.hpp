@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/core_math.hpp"
+
 /* 
  * Simple container for a spherical (radius, azimuth, inclination) 
  * co-ordinate
@@ -24,3 +26,17 @@ struct TrigComponents
     double SinInc = 0.0;
     double CosInc = 0.0;
 };
+
+/*  
+ * Helper function to evaluate the sin and cos components of a spherical 
+ * co-ordinate
+ */
+inline constexpr TrigComponents CalculateTrigComponents(const Spherical& Sph)
+{
+    return TrigComponents{
+        .SinAzm = Sin(Sph.Azm),
+        .CosAzm = Cos(Sph.Azm),
+        .SinInc = Sin(Sph.Inc),
+        .CosInc = Cos(Sph.Inc)
+    };
+}
