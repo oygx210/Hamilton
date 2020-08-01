@@ -2,6 +2,8 @@
 #include "coordinates/earth.hpp"
 #include "gtest/gtest.h"
 
+#include <memory>
+
 // TODO: Complete
 TEST(Gravity, Earth)
 {
@@ -16,16 +18,16 @@ TEST(Gravity, Earth)
         printf("Acceleration (m/s2) = %s\n", Accel.ToString().c_str());
 
         constexpr auto Accel2ndOrder = OblateEarthGravity<HarmonicOrder::SECOND>::CalculateAcceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", Accel2ndOrder.ToString().c_str()); 
+        printf("Acceleration (m/s2) = %s\n", Accel2ndOrder.ToString().c_str());
 
         constexpr auto Accel3rdOrder = OblateEarthGravity<HarmonicOrder::THIRD>::CalculateAcceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", AccelThirdOrder.ToString().c_str());                 
+        printf("Acceleration (m/s2) = %s\n", Accel3rdOrder.ToString().c_str());
     }
 
     // Calculate acceleration at this point (runtime context)
     {
-        auto GravModel = OblateEarthGravity<HarmonicOrder::SPHERICAL>();    
-        auto Accel = GravModel.CalculateAcceleration(Point, Trig);
+        std::unique_ptr<GravityModel> GravModel = std::make_unique<OblateEarthGravity<HarmonicOrder::SPHERICAL>>();    
+        auto Accel = GravModel->Acceleration(Point, Trig);
         printf("Acceleration (m/s2) = %s\n", Accel.ToString().c_str());
     }        
 }

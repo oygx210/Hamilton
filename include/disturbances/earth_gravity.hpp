@@ -21,12 +21,15 @@ enum class HarmonicOrder
  * 
  */
 template <HarmonicOrder Order> 
-class OblateEarthGravity: public GravityModel
+class OblateEarthGravity: virtual public GravityModel
 {
 public:
 
-    constexpr OblateEarthGravity() {}
+    OblateEarthGravity() {}
 
+    /*
+     * Static calculate acceleration
+     */
     constexpr static Vector3 CalculateAcceleration(const Spherical& Sph, const TrigComponents& Trig) noexcept
     {
         // Newtonian contribution    
@@ -58,6 +61,11 @@ public:
 
         return Vector3({0.0, AccelerationInclined, AccelerationRadial});
     }
+
+    Vector3 Acceleration(const Spherical& Sph, const TrigComponents& Trig) const noexcept
+    {
+        return OblateEarthGravity::CalculateAcceleration(Sph, Trig);
+    }    
 
 private:
     // JGM3 Coefficients
