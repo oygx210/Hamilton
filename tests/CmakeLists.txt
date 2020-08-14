@@ -15,6 +15,7 @@ add_executable(HTestExec
     ephemeris_tests/spice.cpp
     disturbance_tests/earth_gravity.cpp
     # mission_tests/manoeuvre.cpp
+    mission_tests/kepler.cpp
 )
 
 

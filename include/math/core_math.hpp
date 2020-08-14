@@ -136,6 +136,22 @@ inline constexpr T Asin(T Val) noexcept
 }
 
 /* 
+ * Arccos function
+ */
+template <typename T>
+inline constexpr T Acos(T Val) noexcept
+{
+    if (std::is_constant_evaluated() == true)    
+    {
+        return gcem::acos(Val);
+    }
+    else
+    {
+        return acos(Val);
+    }
+}
+
+/* 
  * Power function
  * 
  * NOTE: GCEM performs implicit double to T conversion

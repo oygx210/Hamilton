@@ -2,7 +2,7 @@
 #include "coordinates/earth.hpp"
 #include "gtest/gtest.h"
 
-#include <memory>
+#include <memory> 
 
 // TODO: Complete
 TEST(Gravity, Earth)
