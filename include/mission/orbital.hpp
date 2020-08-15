@@ -1,8 +1,22 @@
 #pragma once
 
 #include <limits>
+#include "math/constants.hpp"
 #include "math/core_math.hpp"
 #include "math/vector3.hpp"
+#include "math/quaternion.hpp"
+#include "ephemeris/ephemeris.hpp"
+
+enum struct TwoBodyOrbitClassification
+{
+    INVALID,    
+    CIRCULAR_EQUATORIAL,
+    CIRCULAR_INCLINED,
+    ELLIPTICAL_EQUATORIAL,
+    ELLIPTICAL_INCLINED,
+    PARABOLIC,
+    HYPERBOLIC
+};
 
 /** 
  * Keplerian orbital elements
@@ -48,6 +62,96 @@ struct KeplerianElements
     // The true longitude is the angle measured eastward from the I axis to the position
     // of the satellite
     double TrueLongitude = 0.0;
+
+    /**
+     *  Returns true if the orbit is valid    
+     */
+    constexpr bool IsValid() const noexcept
+    {
+        return (SemiMajorAxis > 0.0);
+    }
+
+    /** 
+     * Returns true if the orbit is closed
+     */
+    constexpr bool IsClosed() const noexcept
+    {
+        return (Eccentricity < 1.0);
+    }
+
+    /** 
+     * Returns true if the orbit is circular in any plane
+     */
+    constexpr bool IsCircular() const noexcept
+    {
+        return (Eccentricity == 0.0);
+    }    
+
+    /** 
+     * Returns true if the orbit is parabolic in any plane
+     */
+    constexpr bool IsParabolic() const noexcept
+    {
+        return (Eccentricity == 1.0);
+    }    
+    
+    /** 
+     * Returns true if the orbit is hyperbolic in any plane
+     */
+    constexpr bool IsHyperbolic() const noexcept
+    {
+        return (Eccentricity > 1.0);
+    }    
+
+    /** 
+     * Returns true if the orbit lies exactly in the equatorial plane
+     */
+    constexpr bool IsEquatorial() const noexcept
+    {
+        return ((Inclination == 0.0) || (Inclination == 180.0));
+    }
+
+    /** 
+     * Gets the classification of the orbit
+     */
+    constexpr TwoBodyOrbitClassification Classification() const noexcept
+    {
+        if (IsValid() == false)
+        {
+            return TwoBodyOrbitClassification::INVALID;    
+        }
+
+        if (Eccentricity > 1.0)
+        {
+            return TwoBodyOrbitClassification::HYPERBOLIC;    
+        }
+        else if (Eccentricity == 1.0)
+        {
+            return TwoBodyOrbitClassification::PARABOLIC;    
+        }
+        else if (Eccentricity > 0.0)
+        {
+            if (Inclination == 0.0)    
+            {
+                return TwoBodyOrbitClassification::ELLIPTICAL_EQUATORIAL;
+            }
+            else
+            {
+                return TwoBodyOrbitClassification::ELLIPTICAL_INCLINED;
+            }
+        }
+        else
+        {
+            if (Inclination == 0.0)    
+            {
+                return TwoBodyOrbitClassification::CIRCULAR_EQUATORIAL;    
+            }
+            else
+            {
+                return TwoBodyOrbitClassification::CIRCULAR_INCLINED;    
+            }
+        }
+    }    
 };
 
 /** 
@@ -151,4 +255,60 @@ constexpr KeplerianElements Newtonian2Kepler(const Vector3& Position, const Vect
     }
 
     return Result;    
+}
+
+/** 
+ * Coverts keplerian orbital elements to position and velocity state vectors
+ * Assumes a 2 body problem. Assumes an aberration free problem to compute light time
+ * Based upon Algorithm 10 as detailed in "Fundamentals of Astrodynamics and applications"
+ * David A. Vallado, 4th Edition
+ * Inputs:
+ * @param Orbit, keplerian orbital elements
+ * @param GravitationalParameter, newtonian gravitational parameter of the central body (m3 / s2)
+ * 
+ * @return, EphemerisState (Position, Velocity, LightTime) 
+ */
+constexpr EphemerisState Kepler2Newtonian(const KeplerianElements& Orbit, double GravitationalParameter) noexcept
+{
+    const auto Classification = Orbit.Classification();
+
+    double UseAnomoly = 0.0, UseNode = 0.0, UsePerigee = 0.0;
+    if (Classification == TwoBodyOrbitClassification::CIRCULAR_EQUATORIAL)
+    {
+        UseAnomoly = Orbit.TrueLongitude;
+    }
+    else if (Classification == TwoBodyOrbitClassification::CIRCULAR_INCLINED)
+    {
+        UseNode = Orbit.Node;
+        UseAnomoly = Orbit.ArgumentLatitude;
+    }
+    else if (Classification == TwoBodyOrbitClassification::ELLIPTICAL_EQUATORIAL)
+    {
+        UsePerigee = Orbit.TrueLongitudeOfPeriapsis;    
+        UseAnomoly = Orbit.TrueAnomoly;
+    }
+    else
+    {
+        UsePerigee = Orbit.ArgumentPerigee;
+        UseNode = Orbit.Node;
+        UseAnomoly = Orbit.TrueAnomoly;
+    }
+
+    const auto CosAnomoly = Cos(D2R(UseAnomoly));
+    const auto SinAnomoly = Sin(D2R(UseAnomoly));
+    const auto Distance = Orbit.SemiParameter / (1.0 + Orbit.Eccentricity * CosAnomoly);
+    const auto Coeff2 = Sqrt(GravitationalParameter / Orbit.SemiParameter);
+
+    // Newtonian state within the orbital plane
+    const auto PosPQW = Vector3({Distance * CosAnomoly, Distance * SinAnomoly, 0.0});
+    const auto VelPQW = Vector3({-Coeff2 * SinAnomoly, Coeff2 * (Orbit.Eccentricity + CosAnomoly), 0.0});
+
+    // Rotation from orbital plane to central body frame
+    const auto Rot = 
+        Quaternion::FromVectorAngle(Vector3::UNIT_Z(), -D2R(UsePerigee)) *
+        Quaternion::FromVectorAngle(Vector3::UNIT_X(), -D2R(Orbit.Inclination)) *
+        Quaternion::FromVectorAngle(Vector3::UNIT_Z(), -D2R(UseNode));
+
+    // Newtonian state
+    return EphemerisState{.Pos = Rot.Rotate(PosPQW), .Vel = Rot.Rotate(VelPQW), .LightTime =  Distance / SPEED_LIGHT};
 }
