@@ -24,7 +24,7 @@ struct LaunchVelocityInputs
     double SiteVelocity = 0.0;       // Linear velocity due to body rotation at the launch site (m/s)
 }; 
 
-/* 
+/**
  * Rough calculation of some basic launch parameters to acehive a given (circular) orbital
  * velocity and inclination from a launch site latitude and velocty
  */

@@ -11,7 +11,7 @@
     #define DEFAULT_LEAP_SECOND_KERNAL (std::string(PROJECT_DIR) + std::string("/data/spice/leap_seconds_kernel/naif0012.tls"))
 #endif
 
-/* 
+/**
  * Ephemeris object using JPL NAIF's Spice as the backend
  */
 class SpiceEphemeris: public Ephemeris

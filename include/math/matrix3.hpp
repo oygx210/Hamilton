@@ -5,19 +5,21 @@
 
 #include <string>
 
-/*
+/**
  * General 3 x 3 matrix object
  */
 class Matrix3
 {
 public:
-    /* Returns an identity matrix */
+    
+    /**
+     * @return Identity Matrix */
     static constexpr Matrix3 IDENTITY(void) noexcept
     {
         return Matrix3{.XX = 1.0, .YY = 1.0, .ZZ = 1.0};
     }
 
-    /* Returns a zero matrix */
+    /** @return Zero Matrix */
     static constexpr Matrix3 ZERO(void) noexcept
     {
         return Matrix3{.XX = 0.0, .XY = 0.0, .XZ = 0.0, 
@@ -38,7 +40,7 @@ public:
     double ZY = 0.0;
     double ZZ = 0.0;
     
-    /* Return the determinant of the matrix */	
+    /** @return Determinant of `this` */	
     constexpr double Determinant(void) const noexcept
     {
         return XX * (YY * ZZ - YZ * ZY) 
@@ -46,7 +48,7 @@ public:
              + XZ * (YX * ZY - YY * ZX);
     }
 
-    /* Return matrix transpose */
+    /** @return Transpose of `this` */
     constexpr Matrix3 Transpose(void) const noexcept
     {
         return Matrix3{.XX = XX, .XY = YX, .XZ = ZX, 
@@ -54,7 +56,12 @@ public:
                           .ZX = XZ, .ZY = YZ, .ZZ = ZZ}; 
     }
 
-    /* Outer product of two vectors */
+    /** 
+     * Outer product of two vectors 
+     * @param U First vector
+     * @param V Second vector
+     * @return The matrix `U`^T x `V`
+     */
     constexpr static Matrix3 Outer(const Vector3& U, const Vector3& V) noexcept
     {
         return Matrix3{ .XX = U.X * V.X, .XY = U.X * V.Y, .XZ = U.X * V.Z,
@@ -72,7 +79,7 @@ public:
     // Matrix Operations
     //	
 
-    /* Multiplication by matrix */
+    /** Multiplication by matrix */
     constexpr Matrix3 operator*(const Matrix3& Mat) const noexcept
     {
         return Matrix3{
@@ -87,7 +94,7 @@ public:
             .ZZ = ZX * Mat.XZ + ZY * Mat.YZ + ZZ * Mat.ZZ};
     }
 
-    /* Multiplication by axis */
+    /** Multiplication by axis */
     constexpr Axis3 operator*(const Axis3& Vect) const noexcept
     {
         return Axis3{.X = XX * Vect.X + XY * Vect.Y + XZ * Vect.Z,
@@ -95,7 +102,7 @@ public:
                      .Z = ZX * Vect.X + ZY * Vect.Y + ZZ * Vect.Z};
     }
 
-    /* Multiplication by vector */
+    /** Multiplication by vector */
     constexpr Vector3 operator*(const Vector3& Vect) const noexcept
     {
         return Vector3({.X = XX * Vect.X + XY * Vect.Y + XZ * Vect.Z,
@@ -103,7 +110,7 @@ public:
                         .Z = ZX * Vect.X + ZY * Vect.Y + ZZ * Vect.Z});
     }	
 
-    /* Multiplication by scalar */
+    /** Multiplication by scalar */
     constexpr Matrix3 operator*(double A) const noexcept
     {
         return Matrix3{.XX = A * XX, .XY = A * XY, .XZ = A * XZ, 
@@ -111,7 +118,7 @@ public:
                        .ZX = A * ZX, .ZY = A * ZY, .ZZ = A * ZZ};
     }
 
-    /* Division by Scalar */
+    /** Division by Scalar */
     constexpr Matrix3 operator/(double A) const noexcept
     {
         return Matrix3{.XX = XX / A, .XY = XY / A, .XZ = XZ / A, 
@@ -119,7 +126,7 @@ public:
                        .ZX = ZX / A, .ZY = ZY / A, .ZZ = ZZ / A};
     }
 
-    /* Addition with matrix */
+    /** Addition with matrix */
     constexpr Matrix3 operator+(const Matrix3& Mat) const noexcept
     {
         return Matrix3{.XX = XX + Mat.XX, .XY = XY + Mat.XY, .XZ = XZ + Mat.XZ, 
@@ -127,7 +134,7 @@ public:
                        .ZX = ZX + Mat.ZX, .ZY = ZY + Mat.ZY, .ZZ = ZZ + Mat.ZZ};
     }
 
-    /* Substraction with matrix */
+    /** Substraction with matrix */
     constexpr Matrix3 operator-(const Matrix3& Mat) const noexcept
     {
         return Matrix3{.XX = XX - Mat.XX, .XY = XY - Mat.XY, .XZ = XZ - Mat.XZ, 
@@ -135,7 +142,7 @@ public:
                        .ZX = ZX - Mat.ZX, .ZY = ZY - Mat.ZY, .ZZ = ZZ - Mat.ZZ};
     }
     
-    /* Negation */
+    /** Negation */
     constexpr Matrix3 operator-(void) const noexcept
     {
         return Matrix3{.XX = -XX, .XY = -XY, .XZ = -XZ, 
@@ -143,7 +150,7 @@ public:
                        .ZX = -ZX, .ZY = -ZY, .ZZ = -ZZ};
     }
 
-    /* Equality comparison */
+    /** Equality comparison */
     constexpr bool operator==(const Matrix3& Mat) const noexcept
     {
         return ((XX == Mat.XX) && (XY == Mat.XY) && (XZ == Mat.XZ) &&
@@ -151,12 +158,15 @@ public:
                 (ZX == Mat.ZX) && (ZY == Mat.ZY) && (ZZ == Mat.ZZ));
     }
 
-    /* Inequality comparison */		
+    /** Inequality comparison */		
     constexpr bool operator!=(const Matrix3& Mat) const noexcept
     {
         return !(*this == Mat);
     }
 
+    /**
+     * @return String representation of Matrix 
+     */
     std::string ToString() const noexcept
     {
         return "[" + std::to_string(XX) + ", " 
@@ -171,7 +181,7 @@ public:
     }
 };
 
-/* Multiplication by scalar on left*/
+/** Multiplication by scalar on left*/
 constexpr Matrix3 operator*(double A, const Matrix3& Mat) noexcept
 {
     return Mat * A;

@@ -10,12 +10,15 @@
 
 namespace Earth
 {
-    /*
+    /**
     * Calculate the radius of the earth at the given
-    * geodetic inclination (rad) assuming the WGS84
+    * `GeodeticInclination` (rad) assuming the WGS84
     * ellipsoid
     * 
     * Accurate to around 0.1 - 1 mm
+    * 
+    * @param GeodeticInclination Geodetic Inclination
+    * @return Instantaneous Radius at the given Inclination
     */
     inline constexpr double WGS84Radius(double GeodeticInclination) noexcept
     {
@@ -31,12 +34,12 @@ namespace Earth
         return Sqrt((A2 * A2 * C2 + B2 * B2 * S2) / (A2 * C2 + B2 * S2));
     }
 
-    /*
+    /**
     * Calculate the azimuthal and inclined radial components
     * needed to convert between ECEF and LLA
     * 
-    * Inputs:
-    * Inclination: geodetic latitude 
+    * @param Inclination Geodetic Latitude (rad)
+    * @return EllispoidRadii components
     */
     inline constexpr EllipsoidRadii WGS84RadiiComponents(double Inclination) noexcept
     {
@@ -48,14 +51,17 @@ namespace Earth
         return EllipsoidRadii{.Azimuthal = N, .Inclined = N * (1.0 - ECCSQ)};
     }
 
-    /*
+    /**
     * Calculates Latitude (deg), longitude (deg), altitude (m)
-    * on the WGS84 Earth model from a given ECEF co-ordinate
+    * on the WGS84 Earth model from a given ECEF co-ordinate. 
     * 
-    * Uses Bowring's method to iterate towards the correct latitude
+    * Uses Bowring's method to iterate towards the correct latitude.
     * 
     * Resulting LLA should be accurate to 8 decimal point of latitude, or
     * about 1.1 mm
+    * 
+    * @param ECEF Earth Centred Earth Fixed co-ordinates of some point P
+    * @return Point P in Latitude (deg), Longitude (deg), Altitude (m) co-ordinates
     */
     inline constexpr LLA ECEF2LLA(const Vector3& ECEF) noexcept
     {
@@ -115,39 +121,46 @@ namespace Earth
         return LLA {.Lat = R2D(Latitude), .Lgt = R2D(Longitude), .Alt = Altitude};
     }
 
-    /* 
+    /**
     * Calculate earth centred, eartg fixed co-ordinates from latitude, 
     * longitude, altitude and ellipsoid radial components
-    * Inputs:
-    * LLAVal: Latitude, Longitude, Altitude
-    * Radii: prime vertical radius of curvature (and its complement) 
-    *       at the given lla
+    * 
+    * @param LLAVal Point P in Latitude (deg), Longitude (deg), Altitude (m)
+    * @param Radii: Prime vertical radius of curvature (and its complement) 
+    * at the given lla
+    * @return Point P in Earth Centred Earth Fixed co-ordinates
     */
     inline constexpr Vector3 LLA2ECEF(const LLA& LLAVal, const EllipsoidRadii& Radii) noexcept
     {
         return LLA2BCBF(LLAVal, Radii);
     }
 
-    /*
+    /**
     * Calculate a quaternion relating ECI to ECEF
+    * @param TimeOffset Seconds offset in the current epoch
+    * @return Quaternion Earth Centred Inertial to Earth Centred Earth Fixed
     */
     inline constexpr Quaternion ECI2ECEF(double TimeOffset) noexcept
     {
         return BCI2BCBF(EARTH::ROTATIONAL_RATE, TimeOffset);
     }    
 
-    /* 
+    /**
     * Calculates a quaternion relating earth centred, earth fixed co-ordinates
     * to East, North, Up co-ordinates
+    * @param LLAVal Point P in Latitude (deg), Longitude (deg), Altitude (m) co-ordinates
+    * @return Quaternion Earth Centred Earth Fixed to East North Up Co-ordinates
     */
     inline constexpr Quaternion QuatECEF2ENU(const LLA& LLAVal) noexcept
     {
         return QuatBCBF2ENU(LLAVal);
     }
 
-    /* 
+    /**
     * Calculates a quaternion relating earth centred, earth fixed co-ordinates
     * to East, North, Up co-ordinates (radians)
+    * @param LLAVal Point P in Latitude (rad), Longitude (rad), Altitude (m) co-ordinates
+    * @return Quaternion Earth Centred Earth Fixed to East North Up Co-ordinates
     */
     inline constexpr Quaternion QuatECEF2ENU(const LLARad& LLAVal) noexcept
     {

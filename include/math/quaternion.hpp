@@ -6,7 +6,7 @@
 
 #include <string>
 
-/*
+/**
  * Quaternion Object
  * 
  * Initialise from components using c++20 designated initiliser syntax i.e
@@ -39,14 +39,15 @@ public:
     double Z = 0.0;
     double S = 1.0;
 
-    /*
+    /**
      * Explicit initialiser to generate a quaternion which describes the minimum 
      * co-ordinate transformation between two frames O -> M by using a vector with
      * components known in both frames. Follows a right handed co-ordinate frame.
      * 
-     * Inputs:
-     * Vector3 U, reference vector represented in frame O
-     * Vector3 V, reference vector represented in frame M
+     * @param U reference vector represented in frame O
+     * @param V reference vector represented in frame M
+     * 
+     * @return Unit Quaternion
      */
     static constexpr Quaternion FromVectorPair(const Vector3& U, const Vector3& V) noexcept
     {
@@ -82,13 +83,14 @@ public:
         return Quaternion{.X = Vc.X, .Y = Vc.Y, .Z = Vc.Z, .S = SV}.Unit();
     }
 
-    /* 
+    /**
      * Explicit initialiser to generate a quaternion which describes the rotation
      * of a co-ordinate frame about an eigenaxis
      * 
-     * Inputs:
-     * Vector3 U, eigenaxis to rotate frame about
-     * double Angle, counterclockwise rotation in radians of the frame about the eigenaxis
+     * @param U eigenaxis to rotate frame about
+     * @param Angle counterclockwise rotation in radians of the frame about the eigenaxis
+     * 
+     * @return Unit Quaternion
      */
     static constexpr Quaternion FromVectorAngle(const Vector3& U, double Angle) noexcept
     {
@@ -100,21 +102,21 @@ public:
                           .S = Cos(Angle * 0.5)};
     }
 
-    /*
-     * Explicit initialiser for an identity quaternion
+    /**
+     * @return Identity Quaternion (x=y=z=0, s=1)
      */
     static constexpr Quaternion IDENTITY(void) noexcept
     {
         return Quaternion{.X=0.0, .Y=0.0, .Z=0.0, .S=1.0};
     }
 
-    /* Returns a zero quaternion */	
+    /** @return Zero (null) Quaternion */	
     static constexpr Quaternion ZERO(void) noexcept
     {
         return Quaternion{.X = 0.0, .Y = 0.0, .Z = 0.0, .S = 0.0};
     }
 
-    /* Return the unit normalised unit quaternion */
+    /** @return Unit quaternion of the original*/
     constexpr Quaternion Unit(void) const noexcept
     {
         const auto Magn = Norm();
@@ -129,7 +131,12 @@ public:
         return ZERO();
     }
 
-    /* Rotate a vector using the quaternion*/
+    /** 
+     * Rotate a vector using the quaternion
+     * 
+     * @param U Vector to be rotated
+     * @return vector rotated by this quaternion
+     */
     constexpr Vector3 Rotate(const Vector3& U) const noexcept
     {
         const auto Tx = Z * U.Y - Y * U.Z;
@@ -141,7 +148,12 @@ public:
                         U.Z + 2.0 * (Tz * S + Tx * Y - Ty * X)});
     }
 
-    /* Rotate a vector using the implicit inverse quaternion */
+    /**
+     * Rotate a vector using the implicit inverse quaternion 
+     * 
+     * @param U Vector to be rotated
+     * @return Vector rotated by this quaternion
+     */
     constexpr Vector3 RotateInv(const Vector3& U) const noexcept
     {
         const auto Tx = -Z * U.Y + Y * U.Z;
@@ -153,7 +165,10 @@ public:
                         U.Z + 2.0 * (Tz * S - Tx * Y + Ty * X)});
     }
 
-    /* Return the inverse of the quaternion */
+    /** 
+     * Calculates the quaternion inverse, does not assume a unit quaternion
+     * @return The inverse of the quaternion 
+     */
     constexpr Quaternion Inverse(void) const noexcept
     {
         const auto Magn = Norm();
@@ -167,7 +182,7 @@ public:
         }
     }
 
-    /* Return the direct cosine matrix representation of the quaternion */
+    /** @return Direct Cosine Matrix representation of the quaternion */
     constexpr Matrix3 DirectCosineMatrix(void) const noexcept
     {
         const auto QX2 = X * X;
@@ -192,22 +207,27 @@ public:
             .ZZ = 1.0 - 2.0 * (QX2 + QY2)} / NormSquared();
     }
 
-    /* Return the norm of the quaternion */
+    /** @return Norm of the quaternion */
     constexpr double Norm(void) const noexcept
     {
         return Sqrt(NormSquared());
     }
 
-    /* Return the square of the quaternion norm. More efficient for size comparisons than norm */
+    /**
+     * More efficient for size comparisons than Norm()
+     * 
+     * @return Qquare of the quaternion norm. 
+     */
     constexpr double NormSquared(void) const noexcept
     {
         return S * S + X * X + Y * Y + Z * Z;
     }
 
-    /* 
-     * Return the derivative of the quaternion 
-     * Inputs:
-     * Omega: rotational rates around each axis
+    /** 
+     * Quaternion derivative, not expected to be a unit quaternion
+     * 
+     * @param Omega Rotational Rates around each axis
+     * @return Quaternion Derivative
      */
     constexpr Quaternion Derivative(const Axis3& Omega) const noexcept
     {
@@ -221,7 +241,7 @@ public:
     // Operations
     //
 
-    /* Multiplication with quaternion (quaternion composition) */
+    /** Multiplication with quaternion (quaternion composition) */
     constexpr Quaternion operator*(const Quaternion& Q) const noexcept
     {
         return Quaternion{.X = Q.X * S + Q.S * X + Q.Z * Y - Q.Y * Z,
@@ -230,7 +250,7 @@ public:
                           .S = Q.S * S - Q.X * X - Q.Y * Y - Q.Z * Z};
     }
 
-    /* Addition with another quaternion */
+    /** Addition with another quaternion */
     constexpr Quaternion operator+(const Quaternion& Q)	const noexcept
     {
         return Quaternion{.X = X + Q.X,
@@ -239,7 +259,7 @@ public:
                           .S = S + Q.S};
     }
 
-    /* Subtraction with another quaternion */
+    /** Subtraction with another quaternion */
     constexpr Quaternion operator-(const Quaternion& Q)	const noexcept
     {
         return Quaternion{.X = X - Q.X,
@@ -248,13 +268,13 @@ public:
                           .S = S - Q.S};
     }	
 
-    /* Negation */
+    /** Negation */
     constexpr Quaternion operator-() const noexcept
     {
         return Quaternion{.X = -X, .Y = -Y, .Z=-Z, .S=-S};
     }
 
-    /* In place addition with another quaternion */
+    /** In place addition with another quaternion */
     void operator+=(const Quaternion& Q) noexcept
     {
         X += Q.X,
@@ -263,7 +283,7 @@ public:
         S += Q.S;
     }	
 
-    /* In place subtraction with another quaternion */
+    /** In place subtraction with another quaternion */
     void operator-=(const Quaternion& Q) noexcept
     {
         X -= Q.X,
@@ -272,7 +292,7 @@ public:
         S -= Q.S;
     }	
 
-    /* Multiplication by scalar */
+    /** Multiplication by scalar */
     constexpr Quaternion operator*(double A) const noexcept
     {
         return Quaternion{.X = X * A,
@@ -281,7 +301,7 @@ public:
                           .S = S * A};
     }		
 
-    /* Division by scalar */
+    /** Division by scalar */
     constexpr Quaternion operator/(double A) const noexcept
     {
         return Quaternion{.X = X / A,
@@ -290,7 +310,7 @@ public:
                           .S = S / A};
     }		
 
-    /* Equality Comparison */	
+    /** Equality Comparison */	
     constexpr bool operator==(const Quaternion& Q) const noexcept
     {
         if (X != Q.X) return false;
@@ -301,22 +321,23 @@ public:
         return true;    
     }
 
-    /* Inequality comparison */
+    /** Inequality comparison */
     constexpr bool operator!=(const Quaternion& Q) const noexcept
     {
         return !(*this == Q);
     }
 
-    /* 
+    /**
      * Get the euler angle (roll, pitch, yaw) representation of the quaternion 
      * describing the transformation between two frames.
      * 
-     * Returns the rotations (counterclockwise) around the x, y, and z axis respectively
+     * Assumes Body 3-2-1 sequence, i.e the resulting angles are determined by the sequence of: 
      * 
-     * Assumes Body 3-2-1 sequence, i.e the resulting angles are determined by the sequence of
      * 3: Yaw about z axis
      * 2: Pitch about y axis
      * 1: Roll about x axis
+     * 
+     * @return Rotations (counterclockwise) around the x, y, and z axis respectively
      */	
     constexpr Axis3 EulerAngles() const noexcept
     {
@@ -351,7 +372,9 @@ public:
         }
     }
 
-    /* String representation of the quaternion */
+    /** 
+     * @return String representation of the quaternion 
+     */
     std::string	ToString() const noexcept
     {
         return "(" + std::to_string(X) + ", " 
@@ -361,7 +384,7 @@ public:
     }
 };
 
-/* Quaternion left multiply by scalar */
+/** Quaternion left multiply by scalar */
 constexpr Quaternion operator*(double A, const Quaternion& Rhs) noexcept
 {
     return Rhs * A;

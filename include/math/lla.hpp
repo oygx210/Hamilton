@@ -1,6 +1,6 @@
 #pragma once
 
-/* 
+/**
  * Simple container for a geodetic latitude, longitude altitude type
  */
 struct LLA
@@ -10,7 +10,7 @@ struct LLA
     double Alt = 0.0; // altitude (m)
 };
 
-/* 
+/**
  * Simple container for a geodetic latitude, longitude altitude type
  * in radians
  */

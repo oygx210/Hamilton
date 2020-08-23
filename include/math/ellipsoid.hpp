@@ -6,7 +6,6 @@
  * 
  * The azimuthal component is also known as the 
  * "prime vertical radius of curvature"
- * 
  */
 struct EllipsoidRadii
 {

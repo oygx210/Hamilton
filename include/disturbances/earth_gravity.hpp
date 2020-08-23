@@ -14,7 +14,7 @@ enum class HarmonicOrder
     THIRD      // Third order harmonics
 };
 
-/* 
+/**
  * Gravitational model for the earth
  * 
  * Uses the dominant terms modal harmonic terms for an approximate and efficient earth gravitation model
@@ -27,13 +27,13 @@ public:
 
     OblateEarthGravity() {}
 
-    /*
+    /**
      * Static calculate acceleration
      */
     constexpr static Vector3 CalculateAcceleration(const Spherical& Sph, const TrigComponents& Trig) noexcept
     {
         // Newtonian contribution    
-        double AccelerationRadial = -EARTH::GRAVITATIONAL_CONSTANT / (Sph.Rad * Sph.Rad);
+        double AccelerationRadial = -EARTH::GRAVITATIONAL_CONSTANT / Square(Sph.Rad);
         double AccelerationInclined = 0.0;
 
         // Higher order contributions
@@ -41,10 +41,8 @@ public:
         {
             // Calculate radius^4 (km^4)
             double Radius = Sph.Rad * 1.0E-3;
-            double RadiusQuart = Radius;
-            RadiusQuart *= RadiusQuart;
-            RadiusQuart *= RadiusQuart;
-            double SinInc2 = Trig.SinInc * Trig.SinInc;
+            double RadiusQuart = Square(Square(Radius));
+            double SinInc2 = Square(Trig.SinInc);
         
             // Second order contribution    
             AccelerationInclined -= J2 * 3.0 * Trig.CosInc * Trig.SinInc / RadiusQuart * 1.0E3;

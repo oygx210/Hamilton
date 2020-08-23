@@ -6,9 +6,13 @@
 
 #include <string>
 
-/* 
- * Compile time is near comparison
+/**
+ * Compile time "is near" comparison
  * 
+ * @param X First comparative value 
+ * @param Y Second comparative value
+ * @param Error Comparative max absolute error
+ * @return true if Fabs(X - Y) < Error
  */
 template <typename T>
 constexpr bool IsNear(T X, T Y, T Error) noexcept
@@ -17,8 +21,13 @@ constexpr bool IsNear(T X, T Y, T Error) noexcept
     return false;
 }
 
-/* 
- * Element wise compile time is near comparison for vectors
+/**
+ * Element wise compile time "is near" comparison for vectors
+ * 
+ * @param V1 First comparative vector
+ * @param V2 Second comparative vector
+ * @param Error Maximum element wise error
+ * @return true if each element of V1 - V2 satisfies |v1i - v2i| < Error
  */
 constexpr bool IsVector3Near(const Vector3& V1, const Vector3& V2, double Error) noexcept
 {
@@ -27,8 +36,13 @@ constexpr bool IsVector3Near(const Vector3& V1, const Vector3& V2, double Error)
             IsNear(V1.Z, V2.Z, Error));
 }
 
-/* 
- * Element wise compile time is near comparison for quaternions
+/**
+ * Element wise compile time "is near" comparison for quaternions
+ * 
+ * @param Q1 First comparative quaternion
+ * @param Q2 Second comparative quaternion
+ * @param Error Maximum element wise error
+ * @return true if each element of Q1 - Q2 satisfies |q1i - q2i| < Error
  */
 constexpr bool IsQuaternionNear(const Quaternion& Q1, const Quaternion& Q2, double Error) noexcept
 {
@@ -38,8 +52,12 @@ constexpr bool IsQuaternionNear(const Quaternion& Q1, const Quaternion& Q2, doub
             IsNear(Q1.S, Q2.S, Error));
 }
 
-/* 
+/**
  * Element wise compile time is near comparison for 3 x 3 matrices
+ * @param M1 First comparative matrix
+ * @param M2 Second comparative matrix
+ * @param Error Maximum element wise error
+ * @return true if each element of M1 - M2 satisfies |m1ij - m2ij| < Error
  */
 constexpr bool IsMatrix3Near(const Matrix3& M1, const Matrix3& M2, double Error) noexcept
 {

@@ -2,7 +2,7 @@
 
 #include "math/core_math.hpp"
 
-/* 
+/**
  * Simple container for a spherical (radius, azimuth, inclination) 
  * co-ordinate
  * Inclination is measured relative to the x-y plane, i.e an
@@ -17,7 +17,7 @@ struct Spherical
 };
 
 /** 
- * Container for trigonometric components
+ * Container for trigonometric Sine and Cosine components
  */
 struct TrigComponents
 {
@@ -27,9 +27,11 @@ struct TrigComponents
     double CosInc = 0.0;
 };
 
-/*  
+/**  
  * Helper function to evaluate the sin and cos components of a spherical 
  * co-ordinate
+ * @param Sph Spherical co-ordinate to calculate components of
+ * @return TrigComponents of `Sph.Inc` and `Sph.Azm`
  */
 inline constexpr TrigComponents CalculateTrigComponents(const Spherical& Sph)
 {

@@ -11,14 +11,14 @@
 #include "math/lla.hpp"
 #include "math/ellipsoid.hpp"
 
-/* 
- * Rotate a vector u in frame A to frame B using the quaternion qA2B,
- * then offset it by some vector v in frame B
+/**
+ * Rotate a vector `VectA` in frame A to frame B using the quaternion `QuatA2B`,
+ * then offset it by some vector `TransB` in frame B
  * 
- * Inputs:
- *  vectA   : original vector u_A in frame A
- *  quatA2B : quaternion describing rotation between frames A -> B
- *  transB  : offset v_B to translate u_B by
+ * @param VectA original vector u_A in frame A
+ * @param quatA2B quaternion describing rotation between frames A -> B
+ * @param TransB offset v_B to translate u_B by
+ * @return Rotated and translated vector
  */
 inline constexpr Vector3 RotateTranslate(
     const Vector3& VectA,
@@ -28,14 +28,14 @@ inline constexpr Vector3 RotateTranslate(
     return QuatA2B.Rotate(VectA) + TransB;
 }
 
-/* 
- * Rotate a vector u in frame A to frame B using the quaternion qB2A,
- * then offset it by some vector v in frame B
+/**
+ * Rotate a vector `VectA` in frame A to frame B using the quaternion `QuatB2A`,
+ * then offset it by some vector `TransB` in frame B
  * 
- * Inputs:
- *  vectA   : original vector u_A in frame A
- *  quatB2A : quaternion describing rotation between frames B -> A
- *  transB  : offset v_B to translate u_B by
+ * @param VectA original vector u_A in frame A
+ * @param QuatB2A quaternion describing rotation between frames B -> A
+ * @param TransB offset v_B to translate u_B by
+ * @return Rotated and translated vector
  */
 inline constexpr Vector3 RotateInvTranslate(
     const Vector3& VectA,
@@ -45,14 +45,14 @@ inline constexpr Vector3 RotateInvTranslate(
     return QuatB2A.RotateInv(VectA) + TransB;
 }
 
-/*
- * Translates vector u in frame A by an offset v in the same frame
- * then rotates it to frame B via the quaternion quatA2B
+/**
+ * Translates vector `VectA` in frame A by an offset `TransA` in the same frame
+ * then rotates it to frame B via the quaternion `QuatA2B`
  * 
- * Inputs:
- *  VectA   : original vector u_A in frame A
- *  TransA  : offset v_A to translate u_A by 
- *  QuatA2B : quaternion describing rotation between frames A -> B
+ * @param VectA original vector u_A in frame A
+ * @param TransA offset v_A to translate u_A by 
+ * @param QuatA2B quaternion describing rotation between frames A -> B
+ * @return Translated and rotated vector
  */
 inline constexpr Vector3 TranslateRotate(const Vector3& VectA, 
                                          const Vector3& TransA, 
@@ -61,14 +61,14 @@ inline constexpr Vector3 TranslateRotate(const Vector3& VectA,
     return QuatA2B.Rotate(VectA + TransA);
 }
 
-/*
- * Translates vector u in frame A by an offset v in the same frame
- * then rotates it to frame B via the quaternion quatB2A
+/**
+ * Translates vector `VectA` in frame A by an offset `TransA` in the same frame
+ * then rotates it to frame B via the quaternion `QuatB2A`
  * 
- * Inputs:
- *  VectA   : original vector u_A in frame A
- *  TransA  : offset v_A to translate u_A by 
- *  QuatB2A : quaternion describing rotation between frames B -> A 
+ * @param VectA original vector u_A in frame A
+ * @param TransA offset v_A to translate u_A by 
+ * @param QuatB2A quaternion describing rotation between frames B -> A 
+ * @return Translated and rotated vector
  */
 inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA, 
                                             const Vector3& TransA, 
@@ -77,12 +77,13 @@ inline constexpr Vector3 TranslateRotateInv(const Vector3& VectA,
     return QuatB2A.RotateInv(VectA + TransA);
 }
 
-/* 
+/**
  * Calculates a quaternion relating a Body Centred Inertial 
  * to Body centred, body fixed frame
- * Inputs:
- * RotationalRate: rotational velocity (rad/s) about the z axis
- * OffsetTime    : time since alignment of BCBF with BCI (s)
+ * 
+ * @param RotationalRate rotational velocity (rad/s) about the z axis
+ * @param OffsetTime time since alignment of BCBF with BCI (s)
+ * @return Quaternion QBCI2BCBF
  */
 inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime) noexcept
 {
@@ -91,10 +92,11 @@ inline constexpr Quaternion BCI2BCBF(double RotationalRate, double OffsetTime) n
         RotationalRate * OffsetTime);
 }
 
-/* 
+/**
  * Calculate spherical coordinates from cartesian
- * Inputs:
- * Cartesian: (x,y,z) co-ordinates
+ * 
+ * @param Cartesian Point P in cartestian (x,y,z) co-ordinates
+ * @return Point P in speherical co-ordinates
  */
 inline constexpr Spherical Cart2Sph(const Vector3& Cartesian) noexcept
 {
@@ -105,10 +107,11 @@ inline constexpr Spherical Cart2Sph(const Vector3& Cartesian) noexcept
                       .Inc = Atan2(Cartesian.Z, Radius)};
 }
 
-/* 
+/**
  * Calculate Cartesion co-ordinates from spherical
- * Inputs:
- * Spherical: (r, azm (rad), inc (rad)) co-ordinates
+ * 
+ * @param Spherical Point P in spherical (r, azm (rad), inc (rad)) co-ordinates
+ * @return Point P in cartesian co-ordinates
  */
 inline constexpr Vector3 Sph2Cart(const Spherical& Spherical) noexcept
 {
@@ -121,13 +124,13 @@ inline constexpr Vector3 Sph2Cart(const Spherical& Spherical) noexcept
                     .Z = Spherical.Rad * Sin(Spherical.Inc)});
 }
 
-/* 
+/**
  * Calculate earth centred, eartg fixed co-ordinates from latitude, 
  * longitude, altitude and ellipsoid radial components
- * Inputs:
- *     LLAVal: Latitude, Longitude, Altitude
- *     Radii: prime vertical radius of curvature (and its complement) 
- * at the given lla
+ * 
+ * @param LLAVal Latitude, Longitude, Altitude
+ * @param Radii prime vertical radius of curvature (and its complement) at the given lla
+ * @return Earth Centred Earth Fixed co-ordinates
  */
 inline constexpr Vector3 LLA2BCBF(const LLA& LLAVal, const EllipsoidRadii& Radii) noexcept
 {
@@ -141,9 +144,12 @@ inline constexpr Vector3 LLA2BCBF(const LLA& LLAVal, const EllipsoidRadii& Radii
                     (Radii.Inclined + LLAVal.Alt) * SPhi});
 }
 
-/* 
+/**
  * Calculates a quaternion relating body centred, body fixed co-ordinates
  * to East, North, Up co-ordinates
+ * 
+ * @param LLAVal Latitude (deg), Longitude (deg), Altitude (m) co-ordinates
+ * @return Quaternion QuatBCBF2ENU
  */
 inline constexpr Quaternion QuatBCBF2ENU(const LLA& LLAVal) noexcept
 {
@@ -152,9 +158,12 @@ inline constexpr Quaternion QuatBCBF2ENU(const LLA& LLAVal) noexcept
            
 }
 
-/* 
+/**
  * Calculates a quaternion relating body centred, body fixed co-ordinates
  * to East, North, Up co-ordinates
+ * 
+ * @param LLAVal Latitude (rad), Longitude (rad), Altitude (m) co-ordinates
+ * @return Quaternion QuatBCBF2ENU
  */
 inline constexpr Quaternion QuatBCBF2ENU(const LLARad& LLAVal) noexcept
 {
@@ -163,14 +172,14 @@ inline constexpr Quaternion QuatBCBF2ENU(const LLARad& LLAVal) noexcept
            
 }
 
-/* 
+/**
  * Computes East, North, Up components from BCBF and a rotation
  * quaternion
  * 
- * Inputs:
- * quatBCBF2ENU: quaternion describing rotation BCBF -> ENU
- * BCBF        : co-ordinate to be transformed in the BCBF frame
- * BCBFOrigin  : Origin of the local ENU frame in the BCBF frame
+ * @param QuatBCBF2ENU Quaternion describing rotation BCBF -> ENU
+ * @param BCBF Co-ordinate P to be transformed in the BCBF frame
+ * @param BCBFOrigin Origin of the local ENU frame in the BCBF frame
+ * @return P in East (m), North (m), Up (m) co-ordinates
  */
 inline constexpr Vector3 BCBF2ENU(
     const Quaternion& QuatBCBF2ENU, 
@@ -180,14 +189,14 @@ inline constexpr Vector3 BCBF2ENU(
     return TranslateRotate(BCBF, -BCBFOrigin, QuatBCBF2ENU);
 }
 
-/* 
+/**
  * Computes body centred, body fixed components from East North Up co-ordinates and a 
  * rotationan quaternion
  * 
- * Inputs:
- *     QuatBCBF2ENU: quaternion describing rotation BCBF -> ENU
- *     ENU         : co-ordinate to be transformed in the local ENU frame
- *     BCBFOrigin  : Origin of the local ENU frame in the BCBF frame
+ * @param QuatBCBF2ENU Quaternion describing rotation BCBF -> ENU
+ * @param ENU Co-ordinate P to be transformed in the local ENU frame
+ * @param BCBFOrigin Origin of the local ENU frame in the BCBF frame
+ * @return P in Body Centred Body Fixed co-ordinates
  */
 inline constexpr Vector3 ENU2BCBF(const Quaternion& QuatBCBF2ENU, 
                                   const Vector3& ENU, 
@@ -196,12 +205,17 @@ inline constexpr Vector3 ENU2BCBF(const Quaternion& QuatBCBF2ENU,
     return RotateInvTranslate(ENU, QuatBCBF2ENU, BCBFOrigin);
 }
 
-/* 
+/** 
  * Calculate the range (m), 
- * azimuth (rad) from due North and
- * inclination (rad) from North-East plane
+ * azimuth (rad) from due North and 
+ * inclination (rad) from North-East plane 
  * between a source point and a target point 
  * described in ENU frame.
+ * 
+ * @param SourceENU Observer location
+ * @param TargetENU Target location
+ * @return Range (m), Azimuth (rad), Inclination (rad) between an observer and target point 
+ * relative to a local tangent plane centred on the observer
  */
 inline constexpr Spherical CalculateLTPRange(
     const Vector3& SourceENU, 
@@ -220,17 +234,18 @@ inline constexpr Spherical CalculateLTPRange(
     return Spherical{.Rad = Range, .Azm = Azimuth, .Inc = Elevation};
 }
 
-/* 
+/** 
  * Calculate the range (m), azimuth (rad) and inclination (rad)
  * from the North East plane from a source and target point.
  * Converts to local tangent plane points as an 
  * intermediate step
  * 
- * Inputs: 
- * SourceBCBF: Source (observer) point in body centred, body fixed frame
- * TargetBCBF: Target (observed) point in body centred, body fixed frame
- * QuatBCBF2ENU: Quaternion describing rotation between source BCBF point
- *     and the local tangent plane ENU co-ordinates at this point
+ * @param SourceBCBF Source (observer) point in body centred, body fixed frame
+ * @param TargetBCBF Target (observed) point in body centred, body fixed frame
+ * @param QuatBCBF2ENU Quaternion describing rotation between source BCBF point 
+ * and the local tangent plane ENU co-ordinates at this point
+ * @return Range (m), Azimuth (rad), Inclination (rad) between an observer and target point 
+ * relative to a local tangent plane centred on the observer
  */
 inline constexpr Spherical CalculateLTPRange(
     const Vector3& SourceBCBF, 
