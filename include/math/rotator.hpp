@@ -38,7 +38,7 @@ public:
         mQuat{Quat.Unit()}, 
         mDCM{mQuat.DirectCosineMatrix()} 
     {
-
+      
     }
 
     /** 

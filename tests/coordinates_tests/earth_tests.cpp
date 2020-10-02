@@ -8,11 +8,11 @@
 TEST(Earth, WGS84)
 {
     // Equatorial Radius
-    static_assert(Earth::WGS84Radius(0.0) == EARTH::WGS84::SEMI_MAJOR_AXIS);
+    static_assert(Earth::WGS84Radius(0.0) == Earth::WGS84::SEMI_MAJOR_AXIS);
 
     // Polar Radius
-    static_assert(Earth::WGS84Radius(PI * 0.5) == EARTH::WGS84::SEMI_MINOR_AXIS);    
-    static_assert(Earth::WGS84Radius(-PI * 0.5) == EARTH::WGS84::SEMI_MINOR_AXIS);      
+    static_assert(Earth::WGS84Radius(PI * 0.5) == Earth::WGS84::SEMI_MINOR_AXIS);    
+    static_assert(Earth::WGS84Radius(-PI * 0.5) == Earth::WGS84::SEMI_MINOR_AXIS);      
 
     // Radius at a latitude of +-55.0 deg    
     static_assert(IsNear(Earth::WGS84Radius(D2R(55.0)), 6363827.355717048, 1.0E-4));
@@ -23,16 +23,16 @@ TEST(Earth, WGS84)
     constexpr auto PolarComponents = Earth::WGS84RadiiComponents(PI * 0.5);
 
     // Check calculation of equatorial components
-    constexpr auto Curvature = 1.0 - EARTH::WGS84::ECCSQ;    
+    constexpr auto Curvature = 1.0 - Earth::WGS84::ECCSQ;    
     {
-        static_assert(EquatorialComponents.Azimuthal == EARTH::WGS84::SEMI_MAJOR_AXIS);
-        static_assert(IsNear(EquatorialComponents.Inclined, EARTH::WGS84::SEMI_MAJOR_AXIS * Curvature, 1.0E-4));
+        static_assert(EquatorialComponents.Azimuthal == Earth::WGS84::SEMI_MAJOR_AXIS);
+        static_assert(IsNear(EquatorialComponents.Inclined, Earth::WGS84::SEMI_MAJOR_AXIS * Curvature, 1.0E-4));
     }
 
     // Check calculation of polar components
     {
-        static_assert(IsNear(PolarComponents.Azimuthal, EARTH::WGS84::SEMI_MAJOR_AXIS / Sqrt(Curvature), 1.0E-4));
-        static_assert(IsNear(PolarComponents.Inclined, EARTH::WGS84::SEMI_MINOR_AXIS, 1.0E-4));
+        static_assert(IsNear(PolarComponents.Azimuthal, Earth::WGS84::SEMI_MAJOR_AXIS / Sqrt(Curvature), 1.0E-4));
+        static_assert(IsNear(PolarComponents.Inclined, Earth::WGS84::SEMI_MINOR_AXIS, 1.0E-4));
     }    
 
 }
@@ -41,7 +41,7 @@ TEST(Earth, WGS84)
 // Inertial to body fixed frame
 TEST(Earth, QuatECI2ECEF)
 {
-    constexpr auto EXPECTED_DRIFT = Fabs(EARTH::ROTATIONAL_RATE * EARTH::IERS_DAY_SECONDS - (2.0 * PI));
+    constexpr auto EXPECTED_DRIFT = Fabs(Earth::ROTATIONAL_RATE * Earth::IERS_DAY_SECONDS - (2.0 * PI));
     constexpr double DRIFT_TOLERANCE = 1.00000005;
 
     // Check alignment every period for simulation durations of at least one year
@@ -51,20 +51,20 @@ TEST(Earth, QuatECI2ECEF)
 
         for (int Index = 1; Index < 365; ++Index)
         {
-            ASSERT_TRUE(IsVector3Near(Earth::ECI2ECEF(Index * EARTH::IERS_DAY_SECONDS).Rotate(Vector3::UNIT_X()),
+            ASSERT_TRUE(IsVector3Near(Earth::ECI2ECEF(Index * Earth::IERS_DAY_SECONDS).Rotate(Vector3::UNIT_X()),
                                       Vector3::UNIT_X(), EXPECTED_DRIFT * Index * DRIFT_TOLERANCE));
         }
     }
 
     // Check alignment over a standard rotation
     {
-        static_assert(IsVector3Near(Earth::ECI2ECEF(EARTH::IERS_DAY_SECONDS * 0.25).Rotate(Vector3::UNIT_X()),
+        static_assert(IsVector3Near(Earth::ECI2ECEF(Earth::IERS_DAY_SECONDS * 0.25).Rotate(Vector3::UNIT_X()),
                                     -Vector3::UNIT_Y(), EXPECTED_DRIFT * 0.25 * DRIFT_TOLERANCE));
 
-        static_assert(IsVector3Near(Earth::ECI2ECEF(EARTH::IERS_DAY_SECONDS * 0.5).Rotate(Vector3::UNIT_X()),
+        static_assert(IsVector3Near(Earth::ECI2ECEF(Earth::IERS_DAY_SECONDS * 0.5).Rotate(Vector3::UNIT_X()),
                                     -Vector3::UNIT_X(), EXPECTED_DRIFT * 0.5 * DRIFT_TOLERANCE));
 
-        static_assert(IsVector3Near(Earth::ECI2ECEF(EARTH::IERS_DAY_SECONDS * 0.75).Rotate(Vector3::UNIT_X()),
+        static_assert(IsVector3Near(Earth::ECI2ECEF(Earth::IERS_DAY_SECONDS * 0.75).Rotate(Vector3::UNIT_X()),
                                     Vector3::UNIT_Y(), EXPECTED_DRIFT * 0.75 * DRIFT_TOLERANCE)); 
     }
 
@@ -75,7 +75,7 @@ TEST(Earth, ECEF2LLA)
 {
     // Equator (prime meridian)
     {
-        constexpr auto ECEF = Vector3({EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto ECEF = Vector3({Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
@@ -85,7 +85,7 @@ TEST(Earth, ECEF2LLA)
 
     // Equator (anti meridian)
     {
-        constexpr auto ECEF = Vector3({-EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto ECEF = Vector3({-Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
@@ -95,7 +95,7 @@ TEST(Earth, ECEF2LLA)
 
     // Equator (+90 deg)
     {
-        constexpr auto ECEF = Vector3({0.0, EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto ECEF = Vector3({0.0, Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
@@ -105,7 +105,7 @@ TEST(Earth, ECEF2LLA)
 
     // Equator (-90 deg)
     {
-        constexpr auto ECEF = Vector3({0.0, -EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto ECEF = Vector3({0.0, -Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, 0.0, 1.0E-8));
@@ -115,7 +115,7 @@ TEST(Earth, ECEF2LLA)
 
     // North Pole
     {
-        constexpr auto ECEF = Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MINOR_AXIS});
+        constexpr auto ECEF = Vector3({0.0, 0.0, Earth::WGS84::SEMI_MINOR_AXIS});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, 90.0, 1.0E-8));
@@ -125,7 +125,7 @@ TEST(Earth, ECEF2LLA)
 
     // South Pole
     {
-        constexpr auto ECEF = Vector3({0.0, 0.0, -EARTH::WGS84::SEMI_MINOR_AXIS});
+        constexpr auto ECEF = Vector3({0.0, 0.0, -Earth::WGS84::SEMI_MINOR_AXIS});
         constexpr auto LLAVal = Earth::ECEF2LLA(ECEF);
 
         static_assert(IsNear(LLAVal.Lat, -90.0, 1.0E-8));
@@ -155,7 +155,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 0.0, .Lgt = 0.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, EquatorialComponents);
 
-        constexpr auto Expected = Vector3({EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto Expected = Vector3({Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-8)); 
     }  
@@ -165,7 +165,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 0.0, .Lgt = 180.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, EquatorialComponents);
 
-        constexpr auto Expected = Vector3({-EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto Expected = Vector3({-Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-8)); 
     }   
@@ -175,7 +175,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 0.0, .Lgt = -180.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, EquatorialComponents);
 
-        constexpr auto Expected = Vector3({-EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto Expected = Vector3({-Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-8)); 
     }     
@@ -185,7 +185,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 0.0, .Lgt = 90.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, EquatorialComponents);
 
-        constexpr auto Expected = Vector3({0.0, EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto Expected = Vector3({0.0, Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-8)); 
     }     
@@ -195,7 +195,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 0.0, .Lgt = -90.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, EquatorialComponents);
 
-        constexpr auto Expected = Vector3({0.0, -EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto Expected = Vector3({0.0, -Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-8)); 
     }           
@@ -205,7 +205,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = 90.0, .Lgt = 0.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, PolarComponents);
 
-        constexpr auto Expected = Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MINOR_AXIS});
+        constexpr auto Expected = Vector3({0.0, 0.0, Earth::WGS84::SEMI_MINOR_AXIS});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-4)); 
     }   
@@ -215,7 +215,7 @@ TEST(Earth, LLA2ECEF)
         constexpr auto LLACoord = LLA{.Lat = -90.0, .Lgt = 0.0, .Alt = 0.0};
         constexpr auto ECEF = Earth::LLA2ECEF(LLACoord, PolarComponents);
 
-        constexpr auto Expected = Vector3({0.0, 0.0, -EARTH::WGS84::SEMI_MINOR_AXIS});
+        constexpr auto Expected = Vector3({0.0, 0.0, -Earth::WGS84::SEMI_MINOR_AXIS});
 
         static_assert(IsVector3Near(ECEF, Expected, 1.0E-4)); 
     }       

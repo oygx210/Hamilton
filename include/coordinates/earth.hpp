@@ -22,12 +22,12 @@ namespace Earth
     */
     inline constexpr double WGS84Radius(double GeodeticInclination) noexcept
     {
-        using namespace EARTH::WGS84;    
+        using namespace Earth::WGS84;    
 
-        auto S = Sin(GeodeticInclination);
-        auto C = Cos(GeodeticInclination);
-        auto S2 = S * S;
-        auto C2 = C * C;
+        const auto S = Sin(GeodeticInclination);
+        const auto C = Cos(GeodeticInclination);
+        const auto S2 = S * S;
+        const auto C2 = C * C;
         constexpr auto A2 = SEMI_MAJOR_AXIS * SEMI_MAJOR_AXIS;
         constexpr auto B2 = SEMI_MINOR_AXIS * SEMI_MINOR_AXIS;
 
@@ -43,10 +43,10 @@ namespace Earth
     */
     inline constexpr EllipsoidRadii WGS84RadiiComponents(double Inclination) noexcept
     {
-        using namespace EARTH::WGS84;    
+        using namespace Earth::WGS84;    
 
-        auto SInc = Sin(Inclination);
-        auto N = SEMI_MAJOR_AXIS / (Sqrt(1.0 - ECCSQ * SInc * SInc));
+        const auto SInc = Sin(Inclination);
+        const auto N = SEMI_MAJOR_AXIS / (Sqrt(1.0 - ECCSQ * SInc * SInc));
 
         return EllipsoidRadii{.Azimuthal = N, .Inclined = N * (1.0 - ECCSQ)};
     }
@@ -65,7 +65,7 @@ namespace Earth
     */
     inline constexpr LLA ECEF2LLA(const Vector3& ECEF) noexcept
     {
-        using namespace EARTH::WGS84;    
+        using namespace Earth::WGS84;    
 
         // Target about 1mm precision
         constexpr double TOLERANCE = 1.0E-8;
@@ -142,7 +142,7 @@ namespace Earth
     */
     inline constexpr Quaternion ECI2ECEF(double TimeOffset) noexcept
     {
-        return BCI2BCBF(EARTH::ROTATIONAL_RATE, TimeOffset);
+        return BCI2BCBF(Earth::ROTATIONAL_RATE, TimeOffset);
     }    
 
     /**

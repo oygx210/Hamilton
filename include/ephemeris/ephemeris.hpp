@@ -32,6 +32,7 @@ public:
      * Gets the current relative state of the tracked body in the 
      * default reference frame relative to the default reference object
      * @param EpochTime Time (s) in the reference epoch
+     * @return EphemerisState (Position, Velocity, LightTime)
      */
     EphemerisState GetState(double EpochTime) const;
 };

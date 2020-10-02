@@ -32,9 +32,9 @@ TEST(LaunchManoeuvre, AbbottsPoint)
     {
         auto Latitude = D2R(-19.0);
         auto Inclination = D2R(98.0);
-        auto OrbitalVelocity = Sqrt(EARTH::GRAVITATIONAL_CONSTANT / (EARTH::WGS84::SEMI_MAJOR_AXIS + 500.0E3)); // m/s
+        auto OrbitalVelocity = Sqrt(Earth::GRAVITATIONAL_CONSTANT / (Earth::WGS84::SEMI_MAJOR_AXIS + 500.0E3)); // m/s
         
-        auto LaunchSiteVelocity = EARTH::ROTATIONAL_RATE * Earth::WGS84Radius(D2R(-19.0)) * Cos(Latitude); // m/s
+        auto LaunchSiteVelocity = Earth::ROTATIONAL_RATE * Earth::WGS84Radius(D2R(-19.0)) * Cos(Latitude); // m/s
 
         auto LaunchComponents = LaunchVelocityComponents({
             .TargetInclination = Inclination,

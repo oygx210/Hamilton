@@ -13,13 +13,16 @@ class Matrix3
 public:
     
     /**
-     * @return Identity Matrix */
+     * @return Identity Matrix 
+     */
     static constexpr Matrix3 IDENTITY(void) noexcept
     {
         return Matrix3{.XX = 1.0, .YY = 1.0, .ZZ = 1.0};
     }
 
-    /** @return Zero Matrix */
+    /**
+     * @return Zero Matrix 
+     */
     static constexpr Matrix3 ZERO(void) noexcept
     {
         return Matrix3{.XX = 0.0, .XY = 0.0, .XZ = 0.0, 
@@ -40,7 +43,9 @@ public:
     double ZY = 0.0;
     double ZZ = 0.0;
     
-    /** @return Determinant of `this` */	
+    /** 
+     * @return Determinant of `this` 
+     */	
     constexpr double Determinant(void) const noexcept
     {
         return XX * (YY * ZZ - YZ * ZY) 
@@ -48,7 +53,9 @@ public:
              + XZ * (YX * ZY - YY * ZX);
     }
 
-    /** @return Transpose of `this` */
+    /** 
+     * @return Transpose of `this` 
+     */
     constexpr Matrix3 Transpose(void) const noexcept
     {
         return Matrix3{.XX = XX, .XY = YX, .XZ = ZX, 
@@ -69,8 +76,29 @@ public:
                         .ZX = U.Z * V.X, .ZY = U.Z * V.Y, .ZZ = U.Z * V.Z };
     }
 
-    /* Return matrix inverse */
-    // Matrix3 inverse(void) const;
+    // template <typename T>
+    // constexpr static T Solve(const Matrix3& A, const T& B) noexcept
+    // {
+    //     T Result = T::ZERO();
+    //     Matrix3 Intermediate = A;
+
+    //     for (const size_t K = 0; I < 3; ++I)
+    //     {
+    //         // Find Pivot
+
+    //         // Check if Matrix is singular or ill posed            
+
+    //         // Do all rows below pivot
+    //         for (const size_t I = K + 1; I < 3; ++I)
+    //         {
+    //             // Calculate all intermediate values on and above diagonal
+
+    //             // Fill lower triangular matrix with zeros                
+    //         }
+    //     }
+
+    //     // Do back substitution
+    // }
 
     /* Calculate eigenvalues and eigenvectors */
     // EigenResult eigenValuesVectors(void) const;

@@ -59,12 +59,12 @@ TEST(Coordinates, BCBF2ENU)
 {
     // prime meridian along equator
     {
-        constexpr auto ECEF = Vector3({EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto ECEF = Vector3({Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
         constexpr auto QECEF2ENU = QuatBCBF2ENU({.LatRad = 0.0, .LgtRad = 0.0});
 
         // Take origin at BCBF origin
         constexpr auto ENU1 = BCBF2ENU(QECEF2ENU, ECEF, Vector3::ZERO());
-        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
+        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, Earth::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
 
         // Take origin at earth radius        
         constexpr auto ENU2 = BCBF2ENU(QECEF2ENU, ECEF, ECEF);
@@ -73,12 +73,12 @@ TEST(Coordinates, BCBF2ENU)
 
     // anti meridian along equator
     {
-        constexpr auto ECEF = Vector3({-EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
+        constexpr auto ECEF = Vector3({-Earth::WGS84::SEMI_MAJOR_AXIS, 0.0, 0.0});
         constexpr auto QECEF2ENU = QuatBCBF2ENU({.LatRad = 0.0, .LgtRad = PI});
 
         // Take origin at BCBF origin
         constexpr auto ENU1 = BCBF2ENU(QECEF2ENU, ECEF, Vector3::ZERO());
-        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
+        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, Earth::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
 
         // Take origin at earth radius        
         constexpr auto ENU2 = BCBF2ENU(QECEF2ENU, ECEF, ECEF);
@@ -87,12 +87,12 @@ TEST(Coordinates, BCBF2ENU)
 
     // +90 deg from prime meridian, along equator
     {
-        constexpr auto ECEF = Vector3({0.0, EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto ECEF = Vector3({0.0, Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
         constexpr auto QECEF2ENU = QuatBCBF2ENU({.LatRad = 0.0, .LgtRad = 0.5 * PI});
 
         // Take origin at BCBF origin
         constexpr auto ENU1 = BCBF2ENU(QECEF2ENU, ECEF, Vector3::ZERO());
-        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
+        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, Earth::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
 
         // Take origin at earth radius        
         constexpr auto ENU2 = BCBF2ENU(QECEF2ENU, ECEF, ECEF);
@@ -101,12 +101,12 @@ TEST(Coordinates, BCBF2ENU)
 
     // -90 deg from prime meridian, along equator
     {
-        constexpr auto ECEF = Vector3({0.0, -EARTH::WGS84::SEMI_MAJOR_AXIS, 0.0});
+        constexpr auto ECEF = Vector3({0.0, -Earth::WGS84::SEMI_MAJOR_AXIS, 0.0});
         constexpr auto QECEF2ENU =  QuatBCBF2ENU({.LatRad = 0.0, .LgtRad = -0.5 * PI});
 
         // Take origin at BCBF origin
         constexpr auto ENU1 = BCBF2ENU(QECEF2ENU, ECEF, Vector3::ZERO());
-        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
+        static_assert(IsVector3Near(ENU1, Vector3({0.0, 0.0, Earth::WGS84::SEMI_MAJOR_AXIS}), 1.0E-8));
 
         // Take origin at earth radius        
         constexpr auto ENU2 = BCBF2ENU(QECEF2ENU, ECEF, ECEF);
@@ -167,7 +167,7 @@ TEST(Coordinates, CalculateLTPRange)
 {
     // Looking at the same point    
     {
-        constexpr auto P1 = Vector3({1000.0, 2000.0, EARTH::WGS84::SEMI_MAJOR_AXIS});
+        constexpr auto P1 = Vector3({1000.0, 2000.0, Earth::WGS84::SEMI_MAJOR_AXIS});
         constexpr auto P2 = P1;
         constexpr auto AER = CalculateLTPRange(P1, P2);
         static_assert(AER.Rad == 0.0);
@@ -177,8 +177,8 @@ TEST(Coordinates, CalculateLTPRange)
 
     // Looking at a south Easterly point from the equator    
     {
-        constexpr auto P1 = Vector3({0.0, 0.0, EARTH::WGS84::SEMI_MAJOR_AXIS});
-        constexpr auto P2 = Vector3({2000.0, -2000.0, EARTH::WGS84::SEMI_MAJOR_AXIS + 8000.0});
+        constexpr auto P1 = Vector3({0.0, 0.0, Earth::WGS84::SEMI_MAJOR_AXIS});
+        constexpr auto P2 = Vector3({2000.0, -2000.0, Earth::WGS84::SEMI_MAJOR_AXIS + 8000.0});
 
         constexpr auto AER = CalculateLTPRange(P1, P2);
         static_assert(AER.Rad == (P1 - P2).Norm());

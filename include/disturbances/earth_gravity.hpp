@@ -33,7 +33,7 @@ public:
     constexpr static Vector3 CalculateAcceleration(const Spherical& Sph, const TrigComponents& Trig) noexcept
     {
         // Newtonian contribution    
-        double AccelerationRadial = -EARTH::GRAVITATIONAL_CONSTANT / Square(Sph.Rad);
+        double AccelerationRadial = -Earth::GRAVITATIONAL_CONSTANT / Square(Sph.Rad);
         double AccelerationInclined = 0.0;
 
         // Higher order contributions

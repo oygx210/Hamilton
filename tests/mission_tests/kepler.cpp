@@ -13,7 +13,7 @@ TEST(Mission, Newtonian2Kepler)
     constexpr auto Position = Vector3({6524834.0, 6862875.0, 6448296.0});
     constexpr auto Velocity = Vector3({4901.327, 5533.756, -1976.341});
 
-    constexpr auto OrbitalElements = TwoBody::Newtonian2Kepler(Position, Velocity, EARTH::GRAVITATIONAL_CONSTANT);
+    constexpr auto OrbitalElements = TwoBody::Newtonian2Kepler(Position, Velocity, Earth::GRAVITATIONAL_CONSTANT);
 
     static_assert(IsNear(OrbitalElements.SemiParameter, 11067798.34266181663, 1.0E-15));
     static_assert(IsNear(OrbitalElements.SemiMajorAxis, 36127337.61967868358, 1.0E-15));
@@ -43,7 +43,7 @@ TEST(Mission, Kepler2Newtonian)
         .TrueLongitudeOfPeriapsis = 247.8064481974865032,
         .ArgumentLatitude = 145.7200873805971355,
         .TrueLongitude = 55.28270798147269005,
-        .GravitationalParameter = EARTH::GRAVITATIONAL_CONSTANT
+        .GravitationalParameter = Earth::GRAVITATIONAL_CONSTANT
     }; 
 
     constexpr auto Newtonian = TwoBody::Kepler2Newtonian(OrbitalElements);

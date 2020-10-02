@@ -2,10 +2,14 @@
 
 #include "math/core_math.hpp"
 
+/** 
+ * @file constants.hpp 
+ */
+
 /// Speed of light in vacuum (m/s)
 constexpr double SPEED_LIGHT = 299792458.0;
 
-namespace EARTH
+namespace Earth
 {
     /// Earth mass (kg)    
     constexpr double MASS = 5.9722E24;                         

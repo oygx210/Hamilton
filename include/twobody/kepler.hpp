@@ -186,7 +186,7 @@ namespace TwoBody
     /** 
      * Compute the keplerian orbital elements given a position and velocity state vector.
      * Assumes a two body problem
-     * Based upon Algorithm 9 as detailed in "Fundamentals of Astrodynamics and applications"
+     * Based upon Algorithm 9 as detailed in "Fundamentals of Astrodynamics and Applications"
      * David A. Vallado, 4th Edition
      * 
      * @param Position instantaneous position (x, y, z) (m) of the orbiting satellite in the body centred frame

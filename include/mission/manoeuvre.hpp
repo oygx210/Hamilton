@@ -6,7 +6,7 @@
 // HACK HACK HACK!: This code does not meet quality standards and needs review
 //
 
-// Output of a launch to inclination/velocity maneouvre
+/// Output of a launch to inclination/velocity maneouvre
 struct LaunchVelocityResult
 { 
     double Vx = 0.0;              // X component of delta v required (m/s)
@@ -15,7 +15,7 @@ struct LaunchVelocityResult
     double Azimuth = 0.0;         // True Azimuth to launch to (rad)
 };
 
-// Inputs to a launch to inclination/velocity maneouvre
+/// Inputs to a launch to inclination/velocity maneouvre
 struct LaunchVelocityInputs
 {
     double TargetInclination = 0.0;  // Required orbital inclination (rad)
@@ -39,10 +39,11 @@ constexpr LaunchVelocityResult LaunchVelocityComponents(const LaunchVelocityInpu
         return Result;
     }
 
-    auto CosLatitude = Cos(Inputs.SiteLatitude);
+    const auto CosLatitude = Cos(Inputs.SiteLatitude);
+
+    // We are at the north or south pole, the concept of azimuth breaks down here    
     if (CosLatitude == 0)
     {
-        // We are at the north or south pole, the concept of azimuth breaks down here
         Result.AzimuthInertial = 0.5 * PI;
     }
     else

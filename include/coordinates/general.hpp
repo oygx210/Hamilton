@@ -1,6 +1,7 @@
 #pragma once
 
-/* 
+/**
+ * @file general.hpp
  * A variety of generalised co-ordinate transformation helpers
  */
 
@@ -119,9 +120,9 @@ inline constexpr Vector3 Sph2Cart(const Spherical& Spherical) noexcept
     const auto CTheta = Cos(Spherical.Azm);
     const auto CPhi   = Cos(Spherical.Inc);
 
-    return Vector3({.X = Spherical.Rad * CTheta * CPhi,
-                    .Y = Spherical.Rad * STheta * CPhi,
-                    .Z = Spherical.Rad * Sin(Spherical.Inc)});
+    return Vector3({Spherical.Rad * CTheta * CPhi,
+                    Spherical.Rad * STheta * CPhi,
+                    Spherical.Rad * Sin(Spherical.Inc)});
 }
 
 /**

@@ -15,6 +15,7 @@ public:
      * Vector3 ({X, Y, Z}), or 
      * Vector3({.X = X, .Y = Y, .Z = Z}),  or
      * Vector3({}), zero vector
+     * @param In Axis3 components of the vector
      */
     constexpr Vector3(const Axis3& In) noexcept: Axis3{In} { }
 
@@ -69,7 +70,7 @@ public:
     /**
      * Calculate vector cross product 
      * @param U Other ector to cross product with
-     * @return Cross product `this` x `U`
+     * @return Cross product this x U
      */
     constexpr Vector3 Cross(const Vector3& U) const noexcept
     {
@@ -80,7 +81,7 @@ public:
      * Calculate vector cross product
      * @param U first vector
      * @param V second vector
-     * @return Cross Product `U` x `V`
+     * @return Cross Product U x V
      */
     constexpr static Vector3 Cross(const Vector3& U, const Vector3& V) noexcept
     {
@@ -90,7 +91,7 @@ public:
     /**
      * Calculate vector dot product
      * @param U Other vector to dot product with
-     * @return Dot Product `this` . `U`
+     * @return Dot Product this . U
      */
     constexpr double Dot(const Vector3& U) const noexcept
     {
@@ -101,7 +102,7 @@ public:
      * Calculate vector dot product
      * @param U first vector
      * @param V second vector
-     * @return `U` . `V`
+     * @return U . V
      */
     constexpr static double Dot(const Vector3& U, const Vector3& V) noexcept
     {
@@ -109,13 +110,19 @@ public:
     }
 
     /** 
-     * @return Unit vector of `this` */
+     * @return Unit vector of `this` 
+     */
     constexpr Vector3 Unit(void) const noexcept
     {
-        const auto Magn = Norm();	
-        if (Magn > 0)	
+        const auto MagnSq = NormSquared();	
+        if (MagnSq > 0)	
         {
-            return *this / Magn;
+            if (MagnSq == 1.0)
+            {
+                return *this;    
+            }
+
+            return *this / Sqrt(MagnSq);
         }
         return ZERO();
     }
