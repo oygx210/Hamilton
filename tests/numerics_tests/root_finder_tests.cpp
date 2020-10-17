@@ -73,22 +73,3 @@ TEST(Root, Secant)
         static_assert(Result.ExitCode == RootFind::ExitStatus::MAX_ITERATIONS_EXCEEDED);
     }    
 }
-
-// Tries to determine a root using ridders method
-// TEST(Root, Ridder)
-// {
-//     // f(x) = x^2 - 2.0    
-//     {
-//         constexpr RootFind::RootFinderResult Result = RootFind::Ridder(F1, 0.0, 2.0);
-
-//         static_assert(IsNear(Result.X, Sqrt(2.0), 1.0E-7));
-//         static_assert(Result.ExitCode == RootFind::ExitStatus::SUCCESS);
-//     }
-
-//     // f(x) = x^2 + 2.0
-//     {
-//         constexpr RootFind::RootFinderResult Result = RootFind::Ridder(F2, 0.0, 2.0);
-
-//         static_assert(Result.ExitCode == RootFind::ExitStatus::INVALID_INTERVAL);
-//     }       
-// }

@@ -4,7 +4,6 @@
  * @file root1d.hpp
  */
 
-#include <cstdio>
 #include "math/core_math.hpp"
 
 namespace RootFind
@@ -94,11 +93,11 @@ namespace RootFind
         double Guess,
         const NewtonParameters& Parameters = DefaultNewtonParameters) noexcept
     {
-        RootFinderResult Result{.X = Guess, .Delta = Function(Guess) / Derivative(Guess)};
+        RootFinderResult Result{.X = Guess};
 
         for (int Index = 0; Index < Parameters.MaxIterations; Index++)
         {
-            Result.X -= Result.Delta;
+            Result.Delta = Parameters.Relaxation * Function(Result.X) / Derivative(Result.X);
 
             // Converged
             if (Abs(Result.Delta) < Parameters.Tolerance)
@@ -108,11 +107,10 @@ namespace RootFind
                 return Result;
             }
 
-            Result.Delta = Parameters.Relaxation * Function(Result.X) / Derivative(Result.X);
+            Result.X -= Result.Delta;
         }
 
         // Did not converge
-        Result.X -= Result.Delta;
         Result.Iterations = Parameters.MaxIterations;
 
         // Invalid inputs
@@ -292,123 +290,4 @@ namespace RootFind
 
         return Result;        
     }
-
-    /** 
-     * Attempts to determine the root x of a zero function f(x) = 0 
-     * using ridders method.
-     * (Ridders, C. (1979). "A new algorithm for computing a single 
-     * root of a real continuous function". IEEE Transactions on Circuits and Systems. 
-     * 26: 979–980). Simple bracketing method with an order of convergence ~sqrt(2). 
-     * @param Function Function f(x) to determine the root of 
-     * @param X1 Lower bound for the interval
-     * @param X2 Upper bound for the interval
-     * @param Parameters Additional solver parameter
-     * @return RootFinderResult
-     */
-    // constexpr RootFinderResult Ridder(
-    //     const auto Function,
-    //     double X1,
-    //     double X2,
-    //     const BoundedParameters& Parameters = DefaultBoundedParameters
-    // )
-    // {
-    //     double F1 = Function(X1);
-    //     double F2 = Function(X2);
-
-    //     if (F1 * F2 > 0)
-    //     {
-    //         return RootFinderResult{.X = 0.5 * (X1 + X2), .Delta = X2 - X1, .ExitCode = ExitStatus::INVALID_INTERVAL};
-    //     }   
-
-    //     RootFinderResult Result{.X = 0.5 * (X1 + X2)};
-
-    //     for (int Index = 0; Index < Parameters.MaxIterations; Index++)
-    //     {
-    //         double F3 = Function(Result.X);
-
-    //         if (F3 == 0.0)
-    //         {
-    //             Result.Iterations = Index;    
-    //             Result.ExitCode = ExitStatus::SUCCESS;    
-    //         }
-
-    //         double DenomSquared = Square(F3) - F1 * F2;
-    //         // double Eps = (F3 + Signum(F2) * Sqrt(DenomSquared)) / F2;
-
-    //         // double X4 = Result.X + (Result.X - X1) * F3 * Eps / (F1 - Eps * F3);
-    //         double X4 = Result.X + (Result.X - X1) * Signum(X1) * F3 / Sqrt(DenomSquared);
-    //         Result.Delta = AbsMin(X4 - X1, X4 - X2);
-
-    //         // Convergence
-    //         if (Result.Delta < Parameters.Tolerance)
-    //         {
-    //             Result.Iterations = Index;
-    //             Result.ExitCode = ExitStatus::SUCCESS;    
-    //             return Result;
-    //         }    
-
-    //         double F4 = Function(X4);
-
-    //         // Bracket is the root
-    //         if (F4 == 0.0)
-    //         {
-    //             Result.X = X4;
-    //             Result.Iterations = Index;
-    //             Result.ExitCode = ExitStatus::SUCCESS;
-    //             return Result;    
-    //         }
-
-    //         // Select next bracket
-    //         if ( F3 * F2 < 0.0 ) 
-    //         {
-    //             if (F4 * F2 < 0.0 ) 
-    //             {
-    //                 X1 = X4; 
-    //                 F1 = F4;
-    //             } 
-    //             else 
-    //             {
-    //                 X1 = Result.X; 
-    //                 F1 = F3;
-    //                 X2 = X4; 
-    //                 F2 = F4;
-    //             }
-    //         } 
-    //         else 
-    //         {
-    //             if ( F4 * F1 < 0.0 )
-    //             {
-    //                 X2 = X4; 
-    //                 F2 = F4;
-    //             }
-    //             else 
-    //             {
-    //                 X1 = X4; 
-    //                 F1 = F4;
-    //                 X2 = Result.X;
-    //                 F2 = F3;
-    //             }
-    //         }            
-
-    //         Result.X = 0.5 * (X1 + X2);                      
-    //     }
-
-    //     Result.Iterations = Parameters.MaxIterations;        
-
-    //     // Invalid inputs
-    //     if (
-    //         (Parameters.Tolerance < 0.0) ||
-    //         (Parameters.MaxIterations < 1)
-    //     )
-    //     {
-    //         Result.ExitCode = ExitStatus::INVALID_PARAMETERS;
-    //     }
-    //     // Max Iterations exceeded
-    //     else
-    //     {
-    //         Result.ExitCode = ExitStatus::MAX_ITERATIONS_EXCEEDED;
-    //     }
-
-    //     return Result;             
-    // }            
 }
