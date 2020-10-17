@@ -6,6 +6,7 @@ include_directories(${APP_INCLUDE_DIRS})
 
 # Tests executable
 add_executable(HTestExec
+    math_tests/basic_math_operations.cpp
     math_tests/vector_operations.cpp
     math_tests/quaternion_operations.cpp
     math_tests/rotator_operations.cpp
@@ -16,6 +17,7 @@ add_executable(HTestExec
     disturbance_tests/earth_gravity.cpp
     # mission_tests/manoeuvre.cpp
     mission_tests/kepler.cpp
+    numerics_tests/root_finder_tests.cpp
 )
 
 

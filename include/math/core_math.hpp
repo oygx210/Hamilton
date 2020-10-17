@@ -40,9 +40,9 @@ namespace Math
      * @return Absolute value of `Val`
      */
     template <typename T>
-    inline constexpr T Fabs(T Val) noexcept
+    inline constexpr T Abs(T Val) noexcept
     {
-        if (Val >= 0) return Val;
+        if (Val >= T{0}) return Val;
         return -Val;
     }
 
@@ -72,6 +72,22 @@ namespace Math
             return sqrt(Val);
         }
     }
+
+    /**
+     * @return Cube root of `Val`
+     */
+    template <typename T>
+    inline constexpr T Cbrt(T Val) noexcept
+    {
+        if (std::is_constant_evaluated() == true)
+        {
+            return gcem::pow(Val, 1.0 / 3.0);
+        }
+        else
+        {
+            return cbrt(Val);
+        }
+    }    
 
     /** 
      * @return Trigonometric Sine of `Val`
@@ -120,6 +136,30 @@ namespace Math
             return tan(Val);
         }
     }
+
+    // Note: gcem::atan implementation performs an implicit 
+    // long double to double conversion, this selectivly 
+    // ignores the thrown warning
+    DISABLE_WARNING_PUSH    
+    DISABLE_WARNING_TYPE_CONVERSION_POSSIBLE_LOSS_OF_DATA
+    /**
+     * @return Arctangent of `X`
+     */
+    template <typename T>
+    inline constexpr T Atan(T X) noexcept
+    {
+        if (std::is_constant_evaluated() == true)    
+        {
+            return gcem::atan(X);
+        }
+        else
+        {
+            return atan(X);
+        }
+    }
+
+    // Turn warnings back on
+    DISABLE_WARNING_POP    
 
     // Note: gcem::atan implementation performs an implicit 
     // long double to double conversion, this selectivly 
@@ -320,6 +360,40 @@ namespace Math
         }
     }
 
+    /** 
+     * Floor Function
+     * @return Floor (Val)
+     */
+    template <typename T>
+    inline constexpr T Floor(T Val) noexcept
+    {
+        if (std::is_constant_evaluated() == true)
+        {
+            return gcem::floor(Val);
+        }
+        else
+        {
+            return floor(Val);
+        }
+    }
+
+    /** 
+     * Ceiling Function
+     * @return Ceiling (Val)
+     */
+    template <typename T>
+    inline constexpr T Ceil(T Val) noexcept
+    {
+        if (std::is_constant_evaluated() == true)
+        {
+            return gcem::ceil(Val);
+        }
+        else
+        {
+            return ceil(Val);
+        }
+    }    
+
     /**
      * @return `Val`^2
      */
@@ -345,6 +419,154 @@ namespace Math
     inline constexpr T Quart(T Val) noexcept
     {
         return Square(Square(Val));
+    }
+
+    /**
+     * @param X First comparison value
+     * @param Y Second comparison value
+     * @return Minimum value of X and Y
+     */
+    template <typename T>
+    inline constexpr T Min(T X, T Y) noexcept
+    {
+        return (X <= Y) ? X : Y;
+    }     
+
+    /**
+     * @param Head First comparison value
+     * @param Comparators Remaining Comparison values
+     * @return Minimum value
+     */
+    template <typename T, typename... Tail>
+    inline constexpr T Min(T Head, Tail... Comparators) noexcept
+    {
+        return Min(Head, Min(Comparators...));
+    }    
+
+    /**
+     * @param X First comparison value
+     * @param Y Second comparison value
+     * @return Maximum value of X and Y
+     */
+    template <typename T>
+    inline constexpr T Max(T X, T Y) noexcept
+    {
+        return (X >= Y) ? X : Y;
+    }     
+
+    /**
+     * @param Head First comparison value
+     * @param Comparators Remaining Comparison values
+     * @return Maximum value
+     */
+    template <typename T, typename... Tail>
+    inline constexpr T Max(T Head, Tail... Comparators) noexcept
+    {
+        return Max(Head, Max(Comparators...));
+    }
+
+    /**
+     * @param X First comparison value
+     * @param Y Second comparison value
+     * @return Minimum value of ||X|| and ||Y||
+     */
+    template <typename T>
+    inline constexpr T AbsMin(T X, T Y) noexcept
+    {
+        auto AbsX = Abs(X);
+        auto AbsY = Abs(Y);
+        return (AbsX <= AbsY) ? AbsX : AbsY;
+    }     
+
+    /**
+     * @param Head First comparison value
+     * @param Comparators Remaining Comparison values
+     * @return Minimum absolute value
+     */
+    template <typename T, typename... Tail>
+    inline constexpr T AbsMin(T Head, Tail... Comparators) noexcept
+    {
+        return AbsMin(Head, AbsMin(Comparators...));
+    } 
+
+    /**
+     * @param X First comparison value
+     * @param Y Second comparison value
+     * @return Maximum value of ||X|| and ||Y||
+     */
+    template <typename T>
+    inline constexpr T AbsMax(T X, T Y) noexcept
+    {
+        auto AbsX = Abs(X);
+        auto AbsY = Abs(Y);
+        return (AbsX >= AbsY) ? AbsX : AbsY;
+    }     
+
+    /**
+     * @param Head First comparison value
+     * @param Comparators Remaining Comparison values
+     * @return Maximum absolute value
+     */
+    template <typename T, typename... Tail>
+    inline constexpr T AbsMax(T Head, Tail... Comparators) noexcept
+    {
+        return AbsMax(Head, AbsMax(Comparators...));
+    }           
+
+    /**
+     *  Calculates the sum of all elements
+     * @param Head Head element
+     * @param Tails All other elements to add
+     * @return Sum of all elements
+     */
+    template <typename T, typename... Tail>
+    inline constexpr auto Sum(T Head, Tail... Tails) noexcept
+    {
+        return (Head + ... + Tails);
+    }
+
+    /** 
+     * Calcuates the average of all elements
+     * @param Head Leading element
+     * @param Tails All other elements
+     * @return Average value
+     */
+    template <typename T, typename... Tail>
+    inline constexpr T Average(T Head, Tail... Tails) noexcept
+    {
+        auto Numerator = Sum(Head, Tails...);
+        return Numerator / static_cast<decltype(Numerator)>(sizeof...(Tails) + 1);
+    }
+
+    /** 
+     * @return Type representation of infinity
+     */
+    template <typename T>
+    inline constexpr T Infinity() noexcept
+    {
+        return std::numeric_limits<T>::infinity();
+    }
+
+    /** 
+     * Clamps a value between a certain range. Behaviour is undefined if Lower > Upper
+     * @param Val Value to be clamped
+     * @param Lower Lower bound
+     * @param Upper Upper bound
+     * @return `Val` if `Lower` <= `Val` <= `Upper`, else the upper or lower boundary
+     */
+    template <typename T>
+    inline constexpr T Clamp(T Val, T Lower, T Upper) noexcept
+    {
+        if (Max(Val, Upper) > Upper)
+        {
+            return Upper;    
+        }
+        else if (Min(Val, Lower) < Lower)
+        {
+            return Lower;
+        }
+
+        return Val;        
     }
 }
 

@@ -18,13 +18,13 @@ TEST(Mission, Newtonian2Kepler)
     static_assert(IsNear(OrbitalElements.SemiParameter, 11067798.34266181663, 1.0E-15));
     static_assert(IsNear(OrbitalElements.SemiMajorAxis, 36127337.61967868358, 1.0E-15));
     static_assert(IsNear(OrbitalElements.Eccentricity, 0.8328533984875214902, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.Inclination, 87.86912617702644468, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.Node, 227.8982603572736991, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.ArgumentPerigee, 53.3849306184597765, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.TrueAnomoly, 92.3351567621373448, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.TrueLongitudeOfPeriapsis, 247.8064481974865032, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.ArgumentLatitude, 145.7200873805971355, 1.0E-15));
-    static_assert(IsNear(OrbitalElements.TrueLongitude, 55.28270798147269005, 1.0E-15));
+    static_assert(IsNear(OrbitalElements.Inclination, D2R(87.86912617702644468), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.Node, D2R(227.8982603572736991), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.ArgumentPerigee, D2R(53.3849306184597765), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.TrueAnomoly, D2R(92.3351567621373448), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.TrueLongitudeOfPeriapsis, D2R(247.8064481974865032), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.ArgumentLatitude, D2R(145.7200873805971355), 1.0E-15));
+    static_assert(IsNear(OrbitalElements.TrueLongitude, D2R(55.28270798147269005), 1.0E-15));
 }
 
 // Example taken from fundamentals of astrodynamics and applications, 4th Edition
@@ -36,13 +36,13 @@ TEST(Mission, Kepler2Newtonian)
         .SemiParameter = 11067798.34266181663,
         .SemiMajorAxis = 36127337.61967868358,
         .Eccentricity = 0.8328533984875214902,
-        .Inclination = 87.86912617702644468,
-        .Node = 227.8982603572736991,
-        .ArgumentPerigee = 53.3849306184597765,
-        .TrueAnomoly = 92.3351567621373448,
-        .TrueLongitudeOfPeriapsis = 247.8064481974865032,
-        .ArgumentLatitude = 145.7200873805971355,
-        .TrueLongitude = 55.28270798147269005,
+        .Inclination = D2R(87.86912617702644468),
+        .Node = D2R(227.8982603572736991),
+        .ArgumentPerigee = D2R(53.3849306184597765),
+        .TrueAnomoly = D2R(92.3351567621373448),
+        .TrueLongitudeOfPeriapsis = D2R(247.8064481974865032),
+        .ArgumentLatitude = D2R(145.7200873805971355),
+        .TrueLongitude = D2R(55.28270798147269005),
         .GravitationalParameter = Earth::GRAVITATIONAL_CONSTANT
     }; 
 

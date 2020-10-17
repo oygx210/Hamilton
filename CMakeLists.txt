@@ -41,6 +41,8 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/gcem")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/cppSpice")
 
 # Add submodule libraries
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/meta")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/twobody")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/ephemeris")
 # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/disturbances")
 

@@ -109,7 +109,7 @@ namespace Earth
                 
             Beta = Atan2((1.0 - FLATTENING) * Sin(Latitude), Cos(Latitude));
             auto NewLat = Bowring(Beta);
-            Delta = Fabs(NewLat - Latitude);
+            Delta = Abs(NewLat - Latitude);
             Latitude = NewLat;
         }
 

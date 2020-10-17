@@ -1,16 +1,18 @@
 #pragma once
 
 #include "kepler.hpp"
+#include "meta/indexable.hpp"
 
 namespace TwoBody
 {
     /** 
-     * Kepler equations coefficients
+     * Anomoly resulting from propogating an orbit ahead by some delta time
      */
-    struct CCoefficents
+    struct DeltaTimeAnomoly
     {
-        double C2 = 0.0;
-        double C3 = 0.0;
+        double MeanAnomoly = 0.0;
+        double EccentricAnomoly = 0.0;
+        int32_t NumberRevolutions = 0;
     };
 
     /** 
@@ -25,7 +27,7 @@ namespace TwoBody
          * @param Elements Keplerian Elements
          * @return Orbit
          */
-        static constexpr Orbit FromKeplerianElements(const KeplerianElements& Elements) noexcept
+        static Orbit FromKeplerianElements(const KeplerianElements& Elements) noexcept
         {
             return Orbit(Elements);
         }
@@ -37,9 +39,9 @@ namespace TwoBody
          * @param GravitationalParameter Central body gravitational parameter (m3/s2)
          * @return Orbit
          */
-        static constexpr Orbit FromNewtonian(const Vector3& Position, const Vector3& Velocity, double GravitationalParameter) noexcept
+        static Orbit FromNewtonian(const Vector3& Position, const Vector3& Velocity, double GravitationalParameter) noexcept
         {
-            return Orbit(Position, Velocity, GravitationalParameter);
+            return Orbit(Newtonian2Kepler(Position, Velocity, GravitationalParameter));
         }
 
         /** 
@@ -47,92 +49,86 @@ namespace TwoBody
          */
         const KeplerianElements& GetElements(void) const noexcept {return mElements;}
 
-        /** 
-         * Computes the values of the C2, C3 coefficients
-         * @return C2, C3 coefficients at the given angle
+        /**
+         * @return Eccentric/Hyperbolic/Parabolic anomoly depending upon orbit classification
          */
-        static constexpr CCoefficents CalculateCoefficients(double Angle) noexcept
-        {
-            if (Angle > 1.0E-6)
-            {
-                const double SqrtAngle = Sqrt(Angle);
-                return CCoefficents{.C2 = (1.0 - Cos(SqrtAngle)) / Angle, .C3 = (SqrtAngle - Sin(SqrtAngle)) / Cube(SqrtAngle)};
-            }
-            else if (Angle < -1.0E-6)
-            {
-                double SqrtAngle = Sqrt(-Angle);    
-                return CCoefficents{.C2 = (1.0 - Cosh(SqrtAngle)) / Angle, .C3 = (Sinh(SqrtAngle) - SqrtAngle) / Cube(SqrtAngle)};
-            }
-            else
-            {
-                // Taylor series approximation truncated to 3 terms O(Angle^2)
-                return CCoefficents{.C2 = 0.5 - Angle / 24.0, .C3 = 1.0 / 6.0 - Angle / 120.0};
-            }
-        }
+        double GetEccentricAnomoly(void) const noexcept {return mEccentricAnomoly;}
+
+        /**
+         * @return Mean time to travel one radian (s)
+         */
+        double GetMeanRadialPeriod(void) const noexcept {return mMeanRadialPeriod;}        
+
+        /**
+         * @return Orbital period (s)
+         */
+        double GetPeriod(void) const noexcept {return mPeriod;}
+
+        /**
+         * @return Current radius from centre of central body (m)
+         */
+        double GetRadius(void) const noexcept {return mRadius;}
+
+        /**
+         * @return Current mean anomoly
+         */
+        double GetMeanAnomoly(void) const noexcept {return mMeanAnomoly;}
+ 
+        /** 
+         * Calculates the delta time required to reach a given `TrueAnomoly`. Can calculate past states if `TrueAnomoly` < Current 
+         * True Anomoly or `TrueAnomoly` < 0. Hence, must add 2*PI to the desired anomoly if referring to the state less than one full 
+         * revolution in the future but such that `TrueAnomoly` < Current True Anomoly         
+         * 
+         * @param TrueAnomoly The desired true anomoly (rad), can be positive or negative.
+         * @return Delta Time to the given delta anomoly, a negative time indicates that the anomoly was reached in the past
+         */
+        double DeltaTimeFromTrueAnomoly(double TrueAnomoly) const noexcept;
 
         /** 
-         * Computes the eccentric anomoly using the eccentricity and the true anomoly
-         * Will return the parabolic or hyperbolic anomoly in the case of a non-elliptic orbit
-         * @param TrueAnomoly True anomoly of the orbit (rad)
-         * @param Eccentricity Eccentricity of the orbit
-         * @return Eccentric anomoly (rad)
+         * Calculates the new orbital anomoly as a result of a delta time from the current orbital state
+         * @param DeltaTime Time difference from current orbital state
+         * @return Anomoly result
          */
-        static constexpr double TrueToEccentricAnomoly(double TrueAnomoly, double Eccentricity) noexcept
-        {    
-            if (Eccentricity < 1.0)    
-            {
-                // Elliptical    
-                const double CosNu = Cos(TrueAnomoly);
-                const double SinNu = Sin(TrueAnomoly);
-                const double Denominator = (1.0 + Eccentricity * CosNu);
-                const double SinE = SinNu * Sqrt(1.0 - Square(Eccentricity)) / Denominator;
-                const double CosE = (Eccentricity + CosNu) / Denominator;
-                return Atan2(SinE, CosE);
-            }
-            else if (Eccentricity == 1.0)
-            {
-                return Tan(0.5 * TrueAnomoly);
-            }
-            else if (Eccentricity > 1.0)
-            {
-                return Asinh(Sin(TrueAnomoly) * Sqrt(Square(Eccentricity) - 1.0) / (1.0 + Eccentricity * Cos(TrueAnomoly)));
-            }
-        }
+        DeltaTimeAnomoly AnomolyFromDeltaTime(double DeltaTime) const noexcept;
 
         /** 
-         * Computes the true anomoly using the eccentricity and eccentric anomoly
-         * @param EccentricAnomoly Eccentric anomoly of the orbit (rad)
-         * @param Eccentricity Eccentricity of the orbit
-         * @return True anomoly (rad)
+         * Updates the orbital parameters in place to a new state `DeltaTime` apart from
+         *  the current orbital state
+         * @param DeltaTime Time difference from current orbital state
          */
-        static constexpr double EccentricToTrueAnomoly(double EccentricAnomoly, double Eccentricity) noexcept
-        {    
-            // Elliptical    
-            const double CosE = Cos(EccentricAnomoly);
-            return Acos((CosE - Eccentricity) / (1.0 - Eccentricity * CosE));
-        }        
+        void Update(double DeltaTime) noexcept;
+
+        /** 
+         * @return const reference to the dynamic index map
+         */
+        const Indexable* GetDynamicIndexMap(void) const {return &mDynamicIndex;}
 
     private:
 
         // Current keplerian state
         KeplerianElements mElements{};
 
-        // rad
-        double EccentricAnomoly = 0.0;
+        // Classification of the conic section
+        OrbitClassification mClassification = OrbitClassification::INVALID;        
 
         // rad
-        double MeanAnomoly = 0.0f;             
+        double mEccentricAnomoly = 0.0;
 
-        constexpr Orbit(const KeplerianElements& Elements) noexcept : mElements{Elements}
-        {
+        // Mean time to travel one radian (s)
+        double mMeanRadialPeriod = 0.0;        
 
-        }
+        // Orbital period (s)
+        double mPeriod = 0.0;
 
+        // Current radius from centre of central body (m)
+        double mRadius = 0.0;
 
-        constexpr Orbit(const Vector3& Position, const Vector3& Velocity, double GravitationalParameter) : 
-            mElements{Newtonian2Kepler(Position, Velocity, GravitationalParameter)}
-        {
+        // rad
+        double mMeanAnomoly = 0.0;    
 
-        }
+        // key to pointer mappings
+        Indexable mDynamicIndex;          
+
+        Orbit(const KeplerianElements& Elements) noexcept;
     };
 }    

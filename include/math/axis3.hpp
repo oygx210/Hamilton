@@ -10,6 +10,7 @@
 class Axis3
 {
 public:
+
     // Element access
     double X = 0.0;
     double Y = 0.0;
@@ -20,7 +21,7 @@ public:
      */
     constexpr static Axis3 ZERO(void) noexcept
     {
-        return Axis3 {0.0, 0.0, 0.0};
+        return Axis3{0.0, 0.0, 0.0};
     }
     
     /** 

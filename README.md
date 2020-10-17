@@ -45,7 +45,7 @@ Find `./HTestExec` (linux) or `./HTestExec.exe` (windows) in the build folder. T
 
 ## Usage
 * Add `.../Hamilton/include` to your projects include path (using the full path to where Hamilton was cloned)
-* Core libraries such as `math` and `ephemeris` are header only, and only need this include path to be added
+* Core libraries such as `math` and are header only, and only need this include path to be added.
 * Other libraries such as `ephemeris` will create a shared or static library object which can be linked against.
 
 ## Development

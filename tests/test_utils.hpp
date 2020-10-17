@@ -12,12 +12,12 @@
  * @param X First comparative value 
  * @param Y Second comparative value
  * @param Error Comparative max absolute error
- * @return true if Fabs(X - Y) < Error
+ * @return true if Abs(X - Y) < Error
  */
 template <typename T>
 constexpr bool IsNear(T X, T Y, T Error) noexcept
 {
-    if (Fabs(X - Y) < Error) return true;
+    if (Abs(X - Y) < Error) return true;
     return false;
 }
 

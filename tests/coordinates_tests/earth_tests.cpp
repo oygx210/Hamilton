@@ -41,7 +41,7 @@ TEST(Earth, WGS84)
 // Inertial to body fixed frame
 TEST(Earth, QuatECI2ECEF)
 {
-    constexpr auto EXPECTED_DRIFT = Fabs(Earth::ROTATIONAL_RATE * Earth::IERS_DAY_SECONDS - (2.0 * PI));
+    constexpr auto EXPECTED_DRIFT = Abs(Earth::ROTATIONAL_RATE * Earth::IERS_DAY_SECONDS - (2.0 * PI));
     constexpr double DRIFT_TOLERANCE = 1.00000005;
 
     // Check alignment every period for simulation durations of at least one year
