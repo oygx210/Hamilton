@@ -77,12 +77,12 @@ namespace RootFind
     constexpr auto DefaultBoundedParameters = BoundedParameters{};    
 
     /** 
-     * Attempts to determine the root x of a zero function f(x) = 0 
+     * Attempts to determine the root x of a zero function f(x, args) = 0 
      * using Newtonian iteration. 
-     * NOTE: Will not check for f'(x) = 0, which will cause a convergence failure. If this is possible, mitigations 
+     * NOTE: Will not check for f'(x, args) = 0, which will cause a convergence failure. If this is possible, mitigations 
      * should be built into the input function 
-     * @param Function Function f(x) to determine the root of 
-     * @param Derivative Function derivative f'(x) to determine the root of
+     * @param Function Function f(x, args) to determine the root of 
+     * @param Derivative Function derivative f'(x, args) to determine the root of
      * @param Guess Initial guess for the root
      * @param Parameters Additional solver parameter
      * @return RootFinderResult
@@ -91,13 +91,14 @@ namespace RootFind
         const auto Function, 
         const auto Derivative, 
         double Guess,
-        const NewtonParameters& Parameters = DefaultNewtonParameters) noexcept
+        const NewtonParameters& Parameters = DefaultNewtonParameters,
+        auto... Args) noexcept
     {
         RootFinderResult Result{.X = Guess};
 
         for (int Index = 0; Index < Parameters.MaxIterations; Index++)
         {
-            Result.Delta = Parameters.Relaxation * Function(Result.X) / Derivative(Result.X);
+            Result.Delta = Parameters.Relaxation * Function(Result.X, Args...) / Derivative(Result.X, Args...);
 
             // Converged
             if (Abs(Result.Delta) < Parameters.Tolerance)
@@ -132,23 +133,25 @@ namespace RootFind
     }
 
     /** 
-     * Attempts to determine the root x of a zero function f(x) = 0 
+     * Attempts to determine the root x of a zero function f(x, args) = 0 
      * using the bisection method
-     * @param Function Function f(x) to determine the root of 
+     * @param Function Function f(x, args) to determine the root of 
      * @param X1 Lower bound for the interval
      * @param X2 Upper bound for the interval
      * @param Parameters Additional solver parameter
+     * @param Args Additional function parameters
      * @return RootFinderResult
      */
     constexpr RootFinderResult Bisect(
         const auto Function,
         double X1,
         double X2,
-        const BoundedParameters& Parameters = DefaultBoundedParameters
+        const BoundedParameters& Parameters = DefaultBoundedParameters,
+        auto... Args
     )
     {
-        double F1 = Function(X1);
-        double F2 = Function(X2);
+        double F1 = Function(X1, Args...);
+        double F2 = Function(X2, Args...);
 
         RootFinderResult Result{.X = 0.5 * (X1 + X2), .Delta = X2 - X1};        
 
@@ -170,7 +173,7 @@ namespace RootFind
             return Result;
         }
 
-        double F3 = Function(Result.X);
+        double F3 = Function(Result.X, Args...);
 
         for (int Index = 0; Index < Parameters.MaxIterations; Index++)
         {
@@ -202,7 +205,7 @@ namespace RootFind
                 return Result; 
             }
 
-            F3 = Function(Result.X);
+            F3 = Function(Result.X, Args...);
         }
 
         Result.Iterations = Parameters.MaxIterations;        
@@ -230,17 +233,19 @@ namespace RootFind
      * @param Function Function f(x) to determine the root of 
      * @param Guess Initial guess for the root
      * @param Parameters Additional solver parameter
+     * @param Args Additional function parameters
      * @return RootFinderResult
      */
     constexpr RootFinderResult Secant(
         const auto Function, 
         double Guess,
-        const NewtonParameters& Parameters = DefaultNewtonParameters) noexcept
+        const NewtonParameters& Parameters = DefaultNewtonParameters,
+        auto... Args) noexcept
     {
         double Xp = Guess;
         RootFinderResult Result {.X = (Xp >= 0) ? Xp * (1.0 + 1.0E-4) + 1.0E-4 : Xp * (1.0 + 1.0E-4) - 1.0E-4};
-        double Yp = Function(Xp);
-        double Yn = Function(Result.X);
+        double Yp = Function(Xp, Args...);
+        double Yn = Function(Result.X, Args...);
         Result.Delta = (Result.X - Xp) / (Yn - Yp) * Yn * Parameters.Relaxation;
 
         for (int Index = 0; Index < Parameters.MaxIterations; Index++)
@@ -266,7 +271,7 @@ namespace RootFind
             Xp = Result.X;
             Result.X -= Result.Delta;
             Yp = Yn;
-            Yn = Function(Result.X);
+            Yn = Function(Result.X, Args...);
             Result.Delta = (Result.X - Xp) / (Yn - Yp) * Yn * Parameters.Relaxation;
         }
 

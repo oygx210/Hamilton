@@ -1,10 +1,11 @@
 #pragma once
 
-/*
+/**
+ * @file meta.hpp
  * Platform independent macros to selectively ignore a compiler warning 
- * without globally unsetting the flag
+ * without globally unsetting the flag. 
  *
- * Should only be used when a correct fix cannot be avoided, i.e when interfacing
+ * Should only be used when a correct fix cannot be avoided, i.e when interfacing 
  * with external codebases which contain the given warnings
  */
 
@@ -38,3 +39,4 @@
     // add additional warnings here
  
 #endif
+    
