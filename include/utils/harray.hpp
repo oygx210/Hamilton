@@ -21,13 +21,16 @@ public:
     /** 
      * Default array of type T of zero length
      */
-    Array() { }
+    HArray() { }
 
     /** 
      * Default initialise array with the given number of elements
      * @param NumberElements Number of elements in array
      */
-    Array(size_t NumberElements) : mVector{NumberElements} { }
+    static HArray<T> OfSize(size_t NumberElements)
+    {
+        return HArray<T>(std::vector<T>(NumberElements));
+    }
 
     /** 
      * Default initialise array with the number of given elements 
@@ -35,7 +38,17 @@ public:
      * @param NumberElements Number of elements in array
      * @param Init Initial value of array elements
      */
-    Array(size_t NumberElements, T Init) : mVector{NumberElements, Init} { }
+    static HArray<T> OfSizeWithInit(size_t NumberElements, T Init)
+    {
+        return HArray<T>(std::vector<T>(NumberElements, Init));
+    }
+
+    /** 
+     * Initialise from a set of elements
+     * @param Args Initial array elements
+     */
+    template <typename... Elements>
+    HArray(Elements... Args) : mVector{Args...} { }
 
     // Array(const Array<T>& Arr) {mVector = Arr.mVector;}
 
@@ -88,7 +101,7 @@ public:
      * Resizes array to the given length
      * @param NewSize New array length
      */
-    void Resize(void) noexcept {mVector.resize();}
+    void Resize(size_t NewSize) noexcept {mVector.resize(NewSize);}
 
     /** 
      * @return Iterator to the first element
@@ -101,12 +114,65 @@ public:
     auto End() noexcept {return mVector.end();}
 
     /** 
+     * @return Constant iterator to the first element
+     */
+    const auto CBegin() const noexcept {return mVector.cbegin();}
+
+    /** 
+     * @return Constant iterator to the last element
+     */
+    const auto CEnd() const noexcept {return mVector.cend();}    
+
+    /** 
      * Inserts an element into the array at the specified location
      * @param Iterator Iterator to the location to insert element at
      * @param Elem Element to insert
      * @return Iterator pointing to the inserted value
      */
-    auto Insert(auto Iterator, const T& Elem) {return mVector.insert(Elem);}
+    auto Insert(auto Iterator, const T& Elem) {return mVector.insert(Iterator, Elem);}
+
+    /** 
+     * Inserts a range into the array at the specified location
+     * @param Position in the array where the new elements are inserted.
+     * @param First
+     * @param Last Iterators specifying a range of elements. Copies of the elements 
+     * in the range [First,Last) are inserted at position (in the same order).
+     * @return An iterator that points to the first of the newly inserted elements.
+     */
+    auto Insert(const auto Position, const auto First, const auto Last) {return mVector.insert(Position, First, Last);}
+
+    /** 
+     * Erase an element at the given location
+     * @param Position Iterator to the position to be removed
+     * @return An iterator pointing to the new location of the 
+     * element that followed the last element erased by the function call. 
+     * This is the container end if the operation erased the last element in the sequence.
+     */
+    auto Erase(auto Position) {return mVector.erase(Position);}
+
+    /** 
+     * @param First
+     * @param Last Iterators specifying a range within the array] to be removed: 
+     * [First, Last). i.e., the range includes all the elements between first and last, 
+     * including the element pointed by first but not the one pointed by last. 
+     * Member types iterator and const_iterator are random access iterator types that 
+     * point to elements.
+     * @return An iterator pointing to the new location of the 
+     * element that followed the last element erased by the function call. 
+     * This is the container end if the operation erased the last element in the sequence. 
+     */
+    auto Erase(auto First, auto Last) {return mVector.erase(First, Last);}
+
+    /** 
+     * Appends a copy of the specified array to the back of this array
+     * @param Arr Array to be copied to back
+     */
+    void AppendBack(const HArray<T>& Arr) {Insert(CEnd(), Arr.CBegin(), Arr.CEnd());}
+
+    /** 
+     * @return standard library vector
+     */
+    const std::vector<T>& CppVector(void) const noexcept {return mVector;}
 
     /** 
      * @param Index location of the element to retrieve
@@ -119,7 +185,7 @@ public:
      * @param Arr array to compare too
      * @return true if arrays are identical
      */
-    bool operator==(const HArray<T>& Arr) {return mVector == Arr.mVector;}
+    bool operator==(const HArray<T>& Arr) const noexcept {return mVector == Arr.mVector;}
 
     /** 
      * Element wise addition of arrays
@@ -128,7 +194,7 @@ public:
     {
         if (Size() != Arr.Size())
         {
-            throw HArraySizeMismatch("Cannot perform associative operations on arrays of different sizes");
+            throw Error::HArraySizeMismatch(__FILE__, __LINE__);
         }
 
         HArray<T> Result{};
@@ -149,7 +215,7 @@ public:
     {
         if (Size() != Arr.Size())
         {
-            throw HArraySizeMismatch("Cannot perform associative operations on arrays of different sizes");
+            throw Error::HArraySizeMismatch(__FILE__, __LINE__);
         }
 
         HArray<T> Result{};
@@ -170,7 +236,7 @@ public:
     {
         if (Size() != Arr.Size())
         {
-            throw HArraySizeMismatch("Cannot perform associative operations on arrays of different sizes");
+            throw Error::HArraySizeMismatch(__FILE__, __LINE__);
         }
 
         for (size_t Index = 0; Index < Size(); Index++)
@@ -182,11 +248,11 @@ public:
     /** 
      * In place element wise subtraction of arrays
      */
-    void operator+=(const HArray<T>& Arr)
+    void operator-=(const HArray<T>& Arr)
     {
         if (Size() != Arr.Size())
         {
-            throw HArraySizeMismatch("Cannot perform associative operations on arrays of different sizes");
+            throw Error::HArraySizeMismatch(__FILE__, __LINE__);
         }
 
         for (size_t Index = 0; Index < Size(); Index++)
@@ -200,7 +266,7 @@ public:
      */
     HArray<T> operator*(T A) const noexcept
     {
-        Harray<T> Result{};
+        HArray<T> Result{};
         Result.Reserve(Size());
 
         for (T& Elem : mVector)
@@ -216,7 +282,7 @@ public:
      */
     HArray<T> operator/(T A) const noexcept
     {
-        Harray<T> Result{};
+        HArray<T> Result{};
         Result.Reserve(Size());
 
         for (T& Elem : mVector)
@@ -230,7 +296,7 @@ public:
     /** 
      * Multiplies elements in place by A
      */
-    HArray<T> operator*=(T A) const noexcept
+    void operator*=(T A) noexcept
     {
         for (T& Elem : mVector)
         {
@@ -241,7 +307,7 @@ public:
     /** 
      * Multiplies elements in place by 1/A
      */
-    HArray<T> operator/=(T A) const noexcept
+    void operator/=(T A) noexcept
     {
         for (T& Elem : mVector)
         {
@@ -307,4 +373,7 @@ private:
 
     /// Surprise! I'm actually a std::vector
     std::vector<T> mVector{};
+
+    /// Instatiate from a c++ vector
+    HArray(std::vector<T> Vec) : mVector{Vec} { }
 };
