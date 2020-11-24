@@ -14,22 +14,25 @@ Hamilton is named after Margaret Hamilton, lead flight software developer for th
 * JPL NAIF Spice Ephemeris wrapper
 * Constant evaluation context of core functionality
 * Extensive test library utilising the GoogleTest framework
-* Cross platform compatibility (partially tested)
 * Azimuth, Elevation and Range calculations between two bodies
 
 #### Planned
 * Component based multi-body and subsystem simulation framework
 * 6DOF dynamics model
 * Aerodynamics model
+* SGP4 compliant propogator
 * Extra-atmospheric drag models
 * Atmospheric models for major solar system bodies
 * Orbital mechanics mission planning toolkit
 * Radiation pressure models
 * Magnetic field models
 * Post Newtonian GR models
+* Cross platform compatibility (partially tested)
+* Graphical User Interface
+* Real time run capability
 
 ## Requirements
-* Requires a C++20 compliant compiler (Tested on GCC 9.3 and MSVC 16 2019)
+* Requires a C++20 compliant compiler (Tested on GCC 9.3)
 * Default build system requires CMake >= 3.15
 
 ## Installing and Building
@@ -50,4 +53,4 @@ Find `./HTestExec` (linux) or `./HTestExec.exe` (windows) in the build folder. T
 
 ## Development
 
-Developer: Tom Reddell (tareddell@gmail.com)
+Developer: Tom Reddell (tom.a.reddell@gmail.com)
