@@ -3,8 +3,7 @@
 #include "math/core_math.hpp"
 #include "vector3.hpp"
 #include "matrix3.hpp"
-
-#include <string>
+#include "utils/hstring.hpp"
 
 /**
  * Quaternion Object
@@ -375,12 +374,12 @@ public:
     /** 
      * @return String representation of the quaternion 
      */
-    std::string	ToString() const noexcept
+    HString	ToString() const
     {
-        return "(" + std::to_string(X) + ", " 
-                   + std::to_string(Y) + ", " 
-                   + std::to_string(Z) + ", " 
-                   + std::to_string(S) + ")";
+        return "(" + HString{X} + ", " 
+                   + HString{Y} + ", " 
+                   + HString{Z} + ", " 
+                   + HString{S} + ")";
     }
 };
 

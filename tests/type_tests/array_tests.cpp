@@ -7,12 +7,12 @@
  * Tests the custom HArray type
  */
 
-TEST(HArray, Functionality)
+TEST(Array, Functionality)
 {
     // Basics    
     {
         // Default constructor    
-        HArray<double> Arr;
+        HArray Arr;
 
         ASSERT_TRUE(Arr.IsEmpty());
 
@@ -87,10 +87,7 @@ TEST(HArray, Functionality)
 
     // Array math operations
     {
-        HArray<double> Arr1;
-        HArray<double> Arr2;
-        HArray<double> Arr3;
-        HArray<double> Arr4;
+        HArray Arr1, Arr2, Arr3, Arr4;
 
         Arr1.Reserve(10);
         Arr2.Reserve(10);
@@ -124,19 +121,19 @@ TEST(HArray, Functionality)
 
     // Insertion and removal
     {
-        HArray<double> Arr {0.0, 1.0, 2.0, 3.0};
+        HArray Arr {0.0, 1.0, 2.0, 3.0};
         Arr.Insert(Arr.Begin() + 1, 5.0);
-        ASSERT_EQ(Arr, HArray<double>(0.0, 5.0, 1.0, 2.0, 3.0));
+        ASSERT_EQ(Arr, HArray(0.0, 5.0, 1.0, 2.0, 3.0));
 
         Arr.Erase(Arr.Begin() + 2);
-        ASSERT_EQ(Arr, HArray<double>(0.0, 5.0, 2.0, 3.0));        
+        ASSERT_EQ(Arr, HArray(0.0, 5.0, 2.0, 3.0));        
 
         Arr.Erase(Arr.Begin() + 1, Arr.Begin() + 3);
-        ASSERT_EQ(Arr, HArray<double>(0.0, 3.0));
+        ASSERT_EQ(Arr, HArray(0.0, 3.0));
 
-        HArray<double> Arr2 {4.0, 5.0, 6.0};
+        HArray Arr2 {4.0, 5.0, 6.0};
         Arr2.Insert(Arr2.End(), Arr.Begin(), Arr.End());
         Arr2.AppendBack(Arr);
-        ASSERT_EQ(Arr2, HArray<double>(4.0, 5.0, 6.0, 0.0, 3.0, 0.0, 3.0));
+        ASSERT_EQ(Arr2, HArray(4.0, 5.0, 6.0, 0.0, 3.0, 0.0, 3.0));
     }  
 }

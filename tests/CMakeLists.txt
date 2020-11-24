@@ -7,6 +7,7 @@ include_directories(${APP_INCLUDE_DIRS})
 # Tests executable
 add_executable(HTestExec
     type_tests/array_tests.cpp
+    type_tests/string_tests.cpp
     math_tests/basic_math_operations.cpp
     math_tests/vector_operations.cpp
     math_tests/quaternion_operations.cpp

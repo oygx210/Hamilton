@@ -8,12 +8,12 @@
  */
 
 /** 
- * Hamilton array type. Wrapper around std::array with support for 
+ * Hamilton array type. Wrapper around std::vector with support for 
  * element wise addition/substraction with another array. Multiplication/Division 
  * with a scalar, and the equivilant in place operations. Requires the underlying
  * type T to support those operations
  */
-template <typename T>
+template <typename T = double>
 class HArray
 {
 public:    
@@ -106,12 +106,20 @@ public:
     /** 
      * @return Iterator to the first element
      */
-    auto Begin() noexcept {return mVector.begin();}
+    const auto Begin() const {return mVector.begin();}
+    auto Begin() {return mVector.begin();}    
+
+    const auto begin() const {return Begin();}    
+    auto begin() {return Begin();}
 
     /** 
      * @return Iterator to the last element
      */
-    auto End() noexcept {return mVector.end();}
+    const auto End() const {return mVector.end();}
+    auto End() {return mVector.end();}
+
+    const auto end() const {return End();}
+    auto end() {return End();}
 
     /** 
      * @return Constant iterator to the first element
@@ -129,7 +137,7 @@ public:
      * @param Elem Element to insert
      * @return Iterator pointing to the inserted value
      */
-    auto Insert(auto Iterator, const T& Elem) {return mVector.insert(Iterator, Elem);}
+    auto Insert(const auto Iterator, const T& Elem) {return mVector.insert(Iterator, Elem);}
 
     /** 
      * Inserts a range into the array at the specified location
@@ -148,7 +156,7 @@ public:
      * element that followed the last element erased by the function call. 
      * This is the container end if the operation erased the last element in the sequence.
      */
-    auto Erase(auto Position) {return mVector.erase(Position);}
+    auto Erase(const auto Position) {return mVector.erase(Position);}
 
     /** 
      * @param First
@@ -180,6 +188,36 @@ public:
      */
     const T& operator[](size_t Index) const {return mVector[Index];}
     T& operator[](size_t Index) {return mVector[Index];}
+
+    /** 
+     * Get element by index, throws if out of bounds
+     * @param Index location of the element to retrieve
+     * @return Element at the given `Index`
+     */
+    const T& IndexSafe(size_t Index) const
+    {
+        if (Index >= Size())
+        {
+            throw Error::OutOfBoundsException(__FILE__, __LINE__, Index, Size());
+        }
+
+        return mVector[Index];
+    }
+
+    /** 
+     * Get element by index, throws if out of bounds
+     * @param Index location of the element to retrieve
+     * @return Element at the given `Index`
+     */
+    T& IndexSafe(size_t Index)
+    {
+        if (Index >= Size())
+        {
+            throw Error::OutOfBoundsException(__FILE__, __LINE__, Index, Size());
+        }
+
+        return mVector[Index];
+    }    
 
     /** 
      * @param Arr array to compare too

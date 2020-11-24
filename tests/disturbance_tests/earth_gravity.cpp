@@ -15,19 +15,19 @@ TEST(Gravity, Earth)
     // Calculate acceleration at this point (constexpr context)
     {
         constexpr auto Accel = OblateEarthGravity<HarmonicOrder::SPHERICAL>::CalculateAcceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", Accel.ToString().c_str());
+        printf("Acceleration (m/s2) = %s\n", Accel.ToString().Data());
 
         constexpr auto Accel2ndOrder = OblateEarthGravity<HarmonicOrder::SECOND>::CalculateAcceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", Accel2ndOrder.ToString().c_str());
+        printf("Acceleration (m/s2) = %s\n", Accel2ndOrder.ToString().Data());
 
         constexpr auto Accel3rdOrder = OblateEarthGravity<HarmonicOrder::THIRD>::CalculateAcceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", Accel3rdOrder.ToString().c_str());
+        printf("Acceleration (m/s2) = %s\n", Accel3rdOrder.ToString().Data());
     }
 
     // Calculate acceleration at this point (runtime context)
     {
         std::unique_ptr<GravityModel> GravModel = std::make_unique<OblateEarthGravity<HarmonicOrder::SPHERICAL>>();    
         auto Accel = GravModel->Acceleration(Point, Trig);
-        printf("Acceleration (m/s2) = %s\n", Accel.ToString().c_str());
+        printf("Acceleration (m/s2) = %s\n", Accel.ToString().Data());
     }        
 }

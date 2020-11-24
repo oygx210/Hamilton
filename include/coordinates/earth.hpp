@@ -103,7 +103,7 @@ namespace Earth
             // Failed to converge
             if (++It == MAXITER)
             {
-                printf("%s(%d) ERROR: Failed to calculate ECEF2LLA for ECEF=%s\n", __FILE__, __LINE__, ECEF.ToString().c_str());
+                printf("%s(%d) ERROR: Failed to calculate ECEF2LLA for ECEF=%s\n", __FILE__, __LINE__, ECEF.ToString().Data());
                 return LLA {.Lat = 0.0, .Lgt = 0.0, .Alt = 0.0};
             }
                 

@@ -14,7 +14,7 @@ EphemerisState SpiceEphemeris::GetState(double EpochTime) const noexcept
 {
     Spice::EphemerisState Intermediate = Spice::CalcEphemerisState(mParams, EpochTime);
 
-    if (Intermediate.CalculationSuccess = false)    
+    if (Intermediate.CalculationSuccess == false)    
     {
         // TODO: Handle Error
         puts(Spice::GetErrorAndReset().c_str());

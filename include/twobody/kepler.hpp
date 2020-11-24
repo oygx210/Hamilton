@@ -96,7 +96,7 @@ namespace TwoBody
 
        /**
          * @param Elements Keplerian elements of the orbit 
-         *  @return `true` if the orbit is valid    
+         * @return `true` if the orbit is valid    
          */
         constexpr bool IsValid(const KeplerianElements& Elements) noexcept
         {
