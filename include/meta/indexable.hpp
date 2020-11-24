@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <string>
+#include "utils/hstring.hpp"
 
 /** Generates an individual entry to an indexable map */
 #define MAP_PTR(X) {#X, &X}
@@ -15,12 +15,12 @@ class Quaternion;
  */
 struct IndexMap
 {
-    const std::map<std::string, const class Indexable*> PtrMapIndexable{};
-    const std::map<std::string, const int*> PtrMapInt{};
-    const std::map<std::string, const double*> PtrMapDouble{};
-    const std::map<std::string, const bool*> PtrMapBool{};
-    const std::map<std::string, const Axis3*> PtrMapAxis3{};
-    const std::map<std::string, const Quaternion*> PtrMapQuaternion{};
+    const std::map<HString, const class Indexable*> PtrMapIndexable{};
+    const std::map<HString, const int*> PtrMapInt{};
+    const std::map<HString, const double*> PtrMapDouble{};
+    const std::map<HString, const bool*> PtrMapBool{};
+    const std::map<HString, const Axis3*> PtrMapAxis3{};
+    const std::map<HString, const Quaternion*> PtrMapQuaternion{};
 };
 
 /** 
@@ -43,7 +43,7 @@ public:
      * @return constant pointer reference to the parameter of interest. Returns 
      * nullptr if the given `Key` cannot be retrieved
      */
-    const int* GetPtrInt(const std::string& Key) const;
+    const int* GetPtrInt(const HString& Key) const;
 
     /** 
      * Gets an immutable pointer to an double type index by the given `Key`
@@ -51,7 +51,7 @@ public:
      * @return constant pointer reference to the parameter of interest. Returns 
      * nullptr if the given `Key` cannot be retrieved
      */
-    const double* GetPtrDouble(const std::string& Key) const;
+    const double* GetPtrDouble(const HString& Key) const;
 
     /** 
      * Gets an immutable pointer to a bool type index by the given `Key`
@@ -59,7 +59,7 @@ public:
      * @return constant pointer reference to the parameter of interest. Returns 
      * nullptr if the given `Key` cannot be retrieved
      */
-    const bool* GetPtrBool(const std::string& Key) const;
+    const bool* GetPtrBool(const HString& Key) const;
 
     /** 
      * Gets an immutable pointer to an Axis3 type index by the given `Key`
@@ -67,7 +67,7 @@ public:
      * @return constant pointer reference to the parameter of interest. Returns 
      * nullptr if the given `Key` cannot be retrieved    
      */
-    const Axis3* GetPtrAxis3(const std::string& Key) const;
+    const Axis3* GetPtrAxis3(const HString& Key) const;
 
     /** 
      * Gets an immutable pointer to an Quaternion type index by the given `Key`
@@ -75,7 +75,7 @@ public:
      * @return constant pointer reference to the parameter of interest. Returns 
      * nullptr if the given `Key` cannot be retrieved    
      */
-    const Quaternion* GetPtrQuaternion(const std::string& Key) const;    
+    const Quaternion* GetPtrQuaternion(const HString& Key) const;    
 
 private:
     // Dynamic field map

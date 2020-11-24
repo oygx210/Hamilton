@@ -4,14 +4,14 @@
  * Defines a dynamic indexing functionality for a particular type
  */
 #define IMPLEMENT_PROPERTY_MAP(Type, FuncName, PtrMap)\
-const Type* Indexable::FuncName(const std::string& Key) const\
+const Type* Indexable::FuncName(const HString& Key) const\
 {\
-    size_t PeriodFound = Key.find(".");\
+    size_t PeriodFound = Key.Find(".");\
 \
-    if (PeriodFound != std::string::npos)\
+    if (PeriodFound != HString::Npos())\
     {\
-        std::string SubobjectKey {Key, 0, PeriodFound};\
-        std::string FieldString {Key, PeriodFound + 1, Key.size()};\
+        HString SubobjectKey {Key.Substring(0, PeriodFound)};\
+        HString FieldString {Key.Substring(PeriodFound + 1, Key.Size())};\
     \
         auto It = mMap.PtrMapIndexable.find(SubobjectKey);\
         if (It != mMap.PtrMapIndexable.end())\

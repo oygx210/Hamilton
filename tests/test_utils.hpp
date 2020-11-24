@@ -4,8 +4,6 @@
 #include "math/vector3.hpp"
 #include "math/quaternion.hpp"
 
-#include <string>
-
 /**
  * Compile time "is near" comparison
  * 

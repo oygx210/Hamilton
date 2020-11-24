@@ -137,7 +137,12 @@ public:
     /** 
      * @return `true` if strings are not equal
      */
-    bool operator!=(const HString& Str) const noexcept {return mString != Str.mString;}    
+    bool operator!=(const HString& Str) const noexcept {return mString != Str.mString;}  
+
+    bool operator<(const HString& Str) const noexcept {return mString < Str.mString;}
+    bool operator<=(const HString& Str) const noexcept {return mString <= Str.mString;}
+    bool operator>(const HString& Str) const noexcept {return mString > Str.mString;}
+    bool operator>=(const HString& Str) const noexcept {return mString >= Str.mString;}
 
     /** 
      * Checks if this string contains the given substring
@@ -347,6 +352,8 @@ public:
 
         return HString{std::move(Data)};
     }
+
+    static size_t Npos(void) noexcept {return std::string::npos;}
 
 private:
     /// Underlying C++ string type
