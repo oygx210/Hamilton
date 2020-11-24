@@ -3,8 +3,6 @@
 #include "axis3.hpp"
 #include "vector3.hpp"
 
-#include <string>
-
 /**
  * General 3 x 3 matrix object
  */
@@ -195,17 +193,17 @@ public:
     /**
      * @return String representation of Matrix 
      */
-    std::string ToString() const noexcept
+    HString ToString() const noexcept
     {
-        return "[" + std::to_string(XX) + ", " 
-                   + std::to_string(XY) + ", " 
-                   + std::to_string(XZ) + "; " 
-                   + std::to_string(YX) + ", " 
-                   + std::to_string(YY) + ", " 
-                   + std::to_string(YZ) + "; " 
-                   + std::to_string(ZX) + ", " 
-                   + std::to_string(ZY) + ", " 
-                   + std::to_string(ZZ) + "]";
+        return "[" + HString{XX} + ", " 
+                   + HString{XY} + ", " 
+                   + HString{XZ} + "; " 
+                   + HString{YX} + ", " 
+                   + HString{YY} + ", " 
+                   + HString{YZ} + "; " 
+                   + HString{ZX} + ", " 
+                   + HString{ZY} + ", " 
+                   + HString{ZZ} + "]";
     }
 };
 

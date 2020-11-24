@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "utils/hstring.hpp"
 
 /**
  * Object which is defined by 3 independent elements
@@ -27,10 +27,8 @@ public:
     /** 
      * @return String representation
      */	
-    std::string ToString(void) const noexcept
+    HString ToString(void) const
     {
-        return "(" + std::to_string(X) + ", " 
-                   + std::to_string(Y) + ", " 
-                   + std::to_string(Z) + ")";
+        return "(" + HString{X} + ", " + HString{Y} + ", " + HString{Z} + ")";
     }
 };

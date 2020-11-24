@@ -541,7 +541,7 @@ namespace Math
     /** 
      * @return Type representation of infinity
      */
-    template <typename T>
+    template <typename T = double>
     inline constexpr T Infinity() noexcept
     {
         return std::numeric_limits<T>::infinity();

@@ -3,8 +3,6 @@
 #include "ephemeris/ephemeris.hpp"
 #include "spice_ephemeris.hpp"
 
-#include <string>
-
 #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__)
     #define DEFAULT_LEAP_SECOND_KERNAL (std::string(PROJECT_DIR) + std::string("/data/spice/leap_seconds_kernel/naif0012.tls.pc"))
 #else
