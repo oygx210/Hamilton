@@ -8,17 +8,18 @@ include_directories(${APP_INCLUDE_DIRS})
 add_executable(HTestExec
     type_tests/array_tests.cpp
     type_tests/string_tests.cpp
-    math_tests/basic_math_operations.cpp
-    math_tests/vector_operations.cpp
-    math_tests/quaternion_operations.cpp
-    math_tests/rotator_operations.cpp
-    math_tests/matrix_operations.cpp
+    math_tests/basic_math_operation_tests.cpp
+    math_tests/vector_operation_tests.cpp
+    math_tests/quaternion_operation_tests.cpp
+    math_tests/rotator_operation_tests.cpp
+    math_tests/matrix_operation_tests.cpp
     coordinates_tests/general_coordinate_tests.cpp
     coordinates_tests/earth_tests.cpp
-    ephemeris_tests/spice.cpp
-    disturbance_tests/earth_gravity.cpp
+    ephemeris_tests/spice_tests.cpp
+    disturbance_tests/earth_gravity_tests.cpp
     # mission_tests/manoeuvre.cpp
-    mission_tests/kepler.cpp
+    twobody_tests/kepler_tests.cpp
+    twobody_tests/orbit_tests.cpp
     numerics_tests/root_finder_tests.cpp
 
 )
@@ -84,4 +85,4 @@ endif()
 add_subdirectory("${GTEST_DIR}" "${CMAKE_BINARY_DIR}/googletest")
 
 # Link Google Test libraries to the executable
-target_link_libraries(HTestExec PRIVATE CppSpice HEphemerisLib gtest_main gtest)
+target_link_libraries(HTestExec PRIVATE CppSpice HEphemerisLib HTwoBodyLib gtest_main gtest)

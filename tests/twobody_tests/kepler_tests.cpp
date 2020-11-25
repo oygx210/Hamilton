@@ -8,7 +8,7 @@
 // Example taken from fundamentals of astrodynamics ad applications, 4th Edition
 // David A. Vallado
 // Example 2-5
-TEST(Mission, Newtonian2Kepler)
+TEST(Kepler, Newtonian2Kepler)
 {
     constexpr auto Position = Vector3({6524834.0, 6862875.0, 6448296.0});
     constexpr auto Velocity = Vector3({4901.327, 5533.756, -1976.341});
@@ -30,7 +30,7 @@ TEST(Mission, Newtonian2Kepler)
 // Example taken from fundamentals of astrodynamics and applications, 4th Edition
 // David A. Vallado
 // Example 2-6
-TEST(Mission, Kepler2Newtonian)
+TEST(Kepler, Kepler2Newtonian)
 {
     constexpr auto OrbitalElements = TwoBody::KeplerianElements{
         .SemiParameter = 11067798.34266181663,

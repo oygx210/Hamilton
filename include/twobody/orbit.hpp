@@ -73,6 +73,11 @@ namespace TwoBody
          * @return Current mean anomoly
          */
         double GetMeanAnomoly(void) const noexcept {return mMeanAnomoly;}
+
+        /** 
+         * @return Orbit classification  
+         */
+        OrbitClassification GetClassification(void) const noexcept {return mClassification;}
  
         /** 
          * Calculates the delta time required to reach a given `TrueAnomoly`. Can calculate past states if `TrueAnomoly` < Current 

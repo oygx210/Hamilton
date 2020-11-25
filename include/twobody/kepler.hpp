@@ -145,7 +145,7 @@ namespace TwoBody
          */
         constexpr bool IsEquatorial(const KeplerianElements& Elements) noexcept
         {
-            return ((Elements.Inclination == 0.0) || (Elements.Inclination == 180.0));
+            return ((Elements.Inclination == 0.0) || (Elements.Inclination == PI));
         }
 
         /** 
@@ -242,9 +242,9 @@ namespace TwoBody
      * Based upon Algorithm 9 as detailed in "Fundamentals of Astrodynamics and Applications"
      * David A. Vallado, 4th Edition
      * 
-     * @param Position instantaneous position (x, y, z) (m) of the orbiting satellite in the body centred frame
-     * @param Velocity instantaneous velocity (x, y, z) (m/s) of the orbiting satellite in the body centred frame
-     * @param GravitationalParameter newtonian gravitational parameter of the central body (m3 / s2)
+     * @param Position Instantaneous position (x, y, z) (m) of the orbiting satellite in the body centred frame
+     * @param Velocity Instantaneous velocity (x, y, z) (m/s) of the orbiting satellite in the body centred frame
+     * @param GravitationalParameter Newtonian gravitational parameter of the central body (m3 / s2)
      * 
      * @return KeplerianElements
      */
